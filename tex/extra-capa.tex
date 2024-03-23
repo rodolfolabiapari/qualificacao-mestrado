@@ -1,3 +1,4 @@
+% !TeX spellcheck = pt_BR
 %!TEX root = ../main_text.tex
 \let\cleardoublepage\clearpage
 \titlepage[Universidade Federal de Ouro Preto]{
@@ -22,7 +23,7 @@ título de Mestre em Ciência da Computação
 \vspace{2.8cm}
 
 \begin{center}
-Ouro Preto, Setembro de 2017
+Ouro Preto, Setembro de 2018 \todo{alterar}
 \end{center}
 }
 
@@ -67,8 +68,41 @@ Dedico este trabalho a você que sempre me fez acreditar na realização dos meu
 %% Abstract in portuguese
 \begin{abstract}[\smaller \titulo\\ \vspace*{1cm} \smaller Resumo]
   %\thispagestyle{empty}
+%1) Contextualização: É a parte que está lá, onde vc passa a ideia geral da área.
+%2) Gap: O que ainda falta na área que foi contextualizada? (especificamente o problema no qual vc "toca").
+%3) Propósito: O que o seu artigo faz? Que tipo de problema vc está endereçando?
+%4) Metodologia: O que vc utilizou no desenvolvimento do seu artigo.
+%5) Resultados: Qual foi o principal (ou os principais resultados) obtidos?
+%6) Conclusões: Qual a sua conclusão mais relevante?
 
 
+%1) Contextualização: É a parte que está lá, onde vc passa a ideia geral da área.
+As tecnologias em microeletrônica, sensores e comunicação móvel têm sido constantemente melhoradas à medida que a informação torna-se mais necessária. 
+Tornam-se um estímulo para o desenvolvimento de sistemas computacionais inteligentes e conectados como sistemas embarcados, IoTs ou \wearables,\ visto pelo rápido desenvolvimento desses para o mercado.
+Tais dispositivos utilizam vários sensores e necessitam de um serviço autônomo, o que implica numa grande demanda de desempenho somado com o baixo consumo de energia. 
+Entretanto ainda com a dificuldade de satisfazer os requisitos de aumento de desempenho e redução de consumo energético das várias aplicações autônomas modernas.
+%Utilizam de um conjunto de sensores e necessitam de um serviço autônomo, o que implica numa demanda de desempenho somado com o baixo consumo de energia.
+%
+%2) Gap: O que ainda falta na área que foi contextualizada? (especificamente o problema no qual vc "toca").
+Análise de desempenho no uso de FPGA com particionamento em \hardware\ para sistemas embarcados têm sido fortemente abordada pela comunidade acadêmica. 
+Entretanto, não há trabalhos científicos que trabalham o particionamento para sistemas \wearable.
+%
+%3) Propósito: O que o seu artigo faz? Que tipo de problema vc está endereçando?
+Esta pesquisa tem como objetivo o aprimoramento de desempenho de dispositivos computacionais \wearables\ em \hardwares\ reconfiguráveis, visando alocação de recursos em \hardware\ e reduzindo o consumo energético%
+%
+%4) Metodologia: O que vc utilizou no desenvolvimento do seu artigo. Deve ser curto.
+, isso utilizando particionamento \hs\ como meio.
+%
+%5) Resultados: Qual foi o principal (ou os principais resultados) obtidos? 
+%6) Conclusões: Qual a sua conclusão mais relevante?
+Os resultados mostram que é possível obter maior desempenho em sistemas \wearables\ utilizando plataforma FPGA apenas com a realocação de algoritmos candidatos em \hardware.
+
+
+Palavras-chave: Particionamento \hs, Sistema \Wearable, FPGA, Performance.
+
+
+
+\begin{comment}
 Este trabalho constitui-se de uma abordagem do problema de particionamento \hs\ para dispositivos vestíveis com foco em aumento de performance, visando o gasto de recursos em seu \textit{trade-off}.
 A tecnologia digital de fatores como microeletrônica, sensores e comunicação móvel são constantemente melhoradas à medida que a informação torna-se cada vez mais sem-fio, tornando-a um grande estímulo para o desenvolvimento de dispositivos inteligentes e conectados como sistemas embarcados IoT ou vestíveis (do inglês \wearables). 
 Isso é visto no rápido desenvolvimento de dispositivos para comércio, entretanto, ainda com a dificuldade de satisfazer os requerimentos das várias aplicações modernas. 
@@ -78,16 +112,17 @@ Para obter um produto de alta qualidade, atendendo aos requisitos solicitados, e
 
 %To adequately address these demands, sophisticated embedded computing and embedded design technologies are needed. After an introduction to modern mobile systems, this paper discusses the huge heterogeneous area of these systems, and considers serious issues and challenges in their design. Subsequently, it discusses the embedded computing and design technologies needed to adequately address the issues and overcome the challenges in order to satisfy the stringent requirements of the modern mobile systems.
 Palavras-chave: Particionamento \hs, Sistema \Wearable, Sistemas Embarcados.
+\end{comment}
 \end{abstract}
 \let\cleardoublepage\clearpage
 
 
 %% Abstract
-\begin{abstract}[\smaller An Approach of Hardware and Software Partitioning Problem for the Design of Wearable Computing Systems\\ \vspace*{1cm} \smaller Abstract]
+\begin{abstract}[\smaller An Approach of Hardware and Software Partitioning for the Design of Wearable in Reconfigurable Hardware\\ \vspace*{1cm} \smaller Abstract]
 
   %\thispagestyle{empty}
-  
-This work consists of an approach of the hardware and software partitioning problem for wearable devices focused on performance enhancement, aiming at the expense of resources in their trade-off.
+ 
+This work consists of an approach \todo[inline]{a}of the hardware and software partitioning problem for wearable devices focused on performance enhancement, aiming at the expense of resources in their trade-off.
 The digital technology of factors such as microelectronics, sensors and mobile communication are constantly improved as information becomes increasingly wireless, making it a great stimulus for the development of intelligent and connected devices like embedded IoT or wearable systems.
 This is seen in the rapid development of devices for commerce, however, still with the difficulty of satisfying the requirements of the various modern applications.
 Such devices use a wide range of sensors and require autonomous service, which implies a great demand for performance coupled with low power consumption without leaving design, security and reliability to be desired.
@@ -96,46 +131,43 @@ In order to obtain a high-quality product, meeting the requested requirements, t
 Keywords: Hardware and Software Partitioning, Wearable System, Embedded System.
 \end{abstract}
 
-\begin{comment}
 
 \let\cleardoublepage\clearpage
 %% Declaration
 \begin{declaration}
-Esta dissertação é resultado de meu próprio trabalho, exceto onde referência explícita é feita ao trabalho de outros, e não foi submetida para outra qualificação nesta nem em outra universidade.
+Esta dissertação é resultado de minha própria pesquisa, exceto onde referência explícita é feita ao trabalho de outros, e não foi submetida para outra qualificação nesta nem em outra universidade.
 \vspace*{1cm}
 \begin{flushright}
-Danilo Santos Souza
+Rodolfo Labiapari Mansur Guimarães
 \end{flushright}
 \end{declaration}
 
+\begin{comment}
 %% Acknowledgements
 \let\cleardoublepage\clearpage
 \begin{acknowledgements}
 
-Primeiramente agradeço à \emph{Deus} por me amparar nos momentos difíceis e me dar força para superar as dificuldades.
+Primeiramente agradeço à Deus por me amparar nos momentos difíceis e me dar força para superar as dificuldades.
 
-Aos meus pais, \emph{Gilsa e Denildo}, e a meu irmão \emph{Diego}, pelo incentivo, apoio e afeto.
+Aos meus pais, Hudson e Márcia Inês, à minha irmã Rúbia e minha namorada Olívia, pelo incentivo, apoio e afeto.
 
-A minha avó \emph{Carmelita}, pelo exemplo de dedicação e por ser uma mãe pra mim.
+À minha madrinha Lucianara, por sempre acreditar nos meus sonhos.
 
-Ao meu Tio \emph{Denilson}, por sempre acreditar em mim quando alguns não acreditavam, e por ser um exemplo de pai e homem.
+À toda minha família, pelo carinho e força.
 
-À toda minha \emph{família}, pelo carinho e força.
+Agradeço ao meu orientador Ricardo Augusto Rabelo Oliveira pela oportunidade concedida, orientação e apoio no desenvolvimento do trabalho. 
 
-Agradeço ao meu orientador \emph{Gustavo Peixoto Silva} pela oportunidade concedida, pela impecável orientação e pelo apoio no desenvolvimento do trabalho. Agradeço ainda ao meu Coorientador \emph{Haroldo Gambini Santos} pelas valiosas contribuições para o presente trabalho.
+Aos meus amigos do laboratório iMobilis Breno Keller, Mateus Coelho, Maurício Silva, Michael Pacheco, Rafael Ferreira, Renato Vilarinho, Ricardo Câmara, Thiago D'Angelo e Vicente Amorim pela ajuda, pelas longas horas de trabalho, amizade, carinho e força, fundamentais para que eu conseguisse chegar até aqui.
 
-Aos meus amigos \emph{Bruna, Priscilla, Gabriela, Thayane, Lorran, Aristides, Alisson, Pereira, Lucas, Marco, Emilia, Danielle e Flavio} pela ajuda, pelas longas horas de estudo, amizade, carinho e força, fundamentais para que eu conseguisse chegar até aqui.
+À República Dominakana, moradores e ex-alunos, por me acolherem, pelo companheirismo e amizade, tornando esta minha segunda casa.
 
-À República \emph{Navio Pirata}, Moradores e Ex-alunos, por me acolherem, pelo companheirismo e amizade, tornando esta minha segunda casa.
+Ao CNPq, à FAPEMIG, à CAPES e à UFOP pelo apoio recebido no desenvolvimento deste trabalho.
 
-Ao \emph{CNPq}, à \emph{FAPEMIG}, à \emph{CAPES} e à \emph{UFOP} pelo apoio recebido no desenvolvimento deste trabalho.
+Ao PPGCC/UFOP, professores e técnicos pela ajuda sempre que fez-se necessário.
 
-Ao \emph{PPGCC - UFOP}, professores e técnicos, em especial aos professores Fabrício, Gustavo e Haroldo, e a Mariana pela ajuda sempre que fez-se necessário.
-
-Enfim, agradeço a \emph{todos} que, de alguma forma, acreditaram e torceram por mim, participaram de minha vida e ajudaram na realização deste trabalho.
+Enfim, agradeço a todos que, de alguma forma, acreditaram e torceram por mim, participaram de minha vida e ajudaram na realização deste trabalho.
 
 \end{acknowledgements}
-
 \end{comment}
 
 
@@ -148,9 +180,9 @@ Enfim, agradeço a \emph{todos} que, de alguma forma, acreditaram e torceram por
 \tableofcontents
 \listoffigures
 \let\cleardoublepage\clearpage
-%\listoftables
+\listoftables
 %%\listofalgorithms
-%\listofalgorithmes
+\listofalgorithmes
 
 \begin{comment}
 

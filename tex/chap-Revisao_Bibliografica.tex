@@ -1,198 +1,412 @@
-%!TEX root = ../main_text.tex
+% !TeX spellcheck = pt_BR
+% !TEX root = ../main_text.tex
+% !TeX encoding = UTF-8
+\chapter{Introdução} \label{chap:introducao}
+    \todo[inline]{procurar por '?'}
+    \todo[inline]{wearables sistemas wearables} % to querendo tudo para ou sistemas ou computação ou dispositivo wearable
+    \todo[inline]{SEs}
+    
+    
+    %\todo[inline]{1) Contextualização: Apresente uma visão da área identificando a importância do contexto q está trabalhando. Introduza os "termos" mais importantes.}
+    
+    %O projeto de Sistemas Embarcados (SE) está cada dia mais complexo \citep{Jozwiak2017}. 
+    %
+    O recente progresso na obtenção e manipulação de informação, em conjunto com a ascensão das tecnologias microeletrônica, comunicação e sensores proporcionaram um enorme estímulo no desenvolvimento de sistemas computacionais embarcados \citep{Jozwiak2017}.
+    %
+    A demanda por curto tempo para disponibilidade de produtos ao mercado somado em exigirem propriedades como alto desempenho, baixo consumo de energia e alocação de recursos, representam um desafio para projetistas de sistemas.% \wearables.
+    
+    % wearable
+    Sistemas \Wearables,\ subcategoria de Sistemas Embarcados (SE), possuem o propósito de integrarem-se ao sistema corporal, expandindo suas capacidades e criando uma integração cada vez mais intensa entre ser humano e tecnologia, sendo sua presença não imediatamente óbvia.
+    Envolvem múltiplos sensores ou outros sistemas e são requeridos para prover serviço autônomo, contínuo, em um longo período de tempo.
+    
+    Esses sistemas possuem diversos componentes implementados em \hs\ e ainda é um desafio combinar alto desempenho com baixo consumo de energia maximizando o tempo de uso \citep{Wolf1994, Edwards1994}.
+    %
+    Uma das maneiras de lidar com tais problemas consiste na combinação das funções do processador/controlador com os recursos dos Arranjo de Portas Programáveis em Campo (FPGAs, do inglês \textit{Field-Programmable Gates Array}) formando um sistema computacional híbrido.
+    
+    
+    %particionamento
+    A decisão tomada na escolha de nível de implementação de cada seção de código nesses sistemas é chamada de Particionamento \HS\ (também abreviado como particionamento). 
+    Trata-se da escolha onde cada seção de código será implementada sendo ela em nível de \software\ por meio de execução pelos controladores ou em \hardware\ por meio de circuitos digitais dedicados à função e tem-se mostrado promissora aumentando o desempenho destes sistemas \citep{Sass2010, BenHajHassine2017}.
+    %
+    As pesquisas em \codesign\ de \hs\ têm como objetivo o \design\ de sistemas heterogêneos, visando desempenho, custo e metas de confiabilidade \citep{Edwards1994}.
+    
+    
+    
+    
+    
+    %\todo[inline]{3) Descreva o estado da arte atual, sempre referenciando trabalhos importantes.}
+    
+    Trabalhos como de \citet{Zhang2008, BenHajHassine2017, Wolf1994, Stone2010} mostram que, uma implementação customizada em \hardware\ pode prover maior eficiência energética e \speedup,\ sendo este a comparação de desempenho à implementações em \software.\ 
+    %
+    %\todo[inline]{2) Gap: Quais são as questões em aberto, restrições e limitações do estado atual dessa pesquisa.}
+    %
+    Entretanto, mesmo com vários estudos relacionados à desempenho com particionamento de SE em plataformas FPGA, não há estudos que avaliam a melhoria de desempenho especificamente para \wearables\ em plataformas FPGA.
+    
+    A motivação é que tal problema que envolve \design\ colaborativo e multidisciplinar, é um passo-chave no \design\ de produtos modernos \citep{Trappey2016}. 
+    Com o desenvolvimento de \designs\ mais complexos, esse problema torna-se cada vez mais necessário, no qual o grande requisito para eficiência necessariamente segue junto com a alta velocidade de processamento \citep{Trindade2016, Arato2005, Yan2017}.
+    Implementações que baseiam-se somente em módulos em nível de \software\ possuem mais flexibilidade e são menos custosos, entretanto, seu custo eleva-se em termos de tempo de execução. 
+    Uma implementação de \hardware\ customizada de um conjunto de instruções proverá uma eficiência energética e \speedup\ maior relativa à implementações em \software\ \citep{Zhang2008, BenHajHassine2017, Wolf1994, Stone2010}.
+    
+    
+    
+    %\todo[inline]{4) Propósito+metodologia: Descreva o propósito do seu artigo utilizando para isso uma pitada da sua metodologia.}
+    
+    Dessa forma, esta pesquisa consiste no particionamento de alguns algoritmos candidatos do \wearable\ comparando o desempenho, alocação de recursos e gasto energético de ambas as implementações \hs.
+    %
+    % combinação de fpga com cpu
+    Ao utilizar o FPGA é possível implementar um sistema e acelerá-lo usando recursos de \hardware\ por meio do particionamento, o que melhora o desempenho e eficiência energética \citep{Cong2009, Lo2009, Zhang2008a}.
+    
+    
+    %\subsection{Contribuição}
+    %parece mais objetivo que contribuição
+    %Esta pesquisa consiste numa busca sobre o aprimoramento de desempenho de dispositivos computacionais \wearables\ em \hardwares\ reconfiguráveis, utilizando particionamento \hs\ como meio.
+    %Visa gastos relativos ao uso de recursos em \hardware\ e gasto energético.
+    A principal contribuição deste trabalho é exibir que particionamento \hs\ é uma excelente técnica para a melhoria de desempenho de \wearables,\ como será exibido.
+    
+    Adicionalmente, algumas contribuições específicas são listadas a seguir:
+    
+    \begin{enumerate}
+        \item 
+        %Apresentação da modelagem do problema de particionamento \hs\ aplicando tal técnica nessa classe de sistemas embarcados, buscando pelo aprimoramento de desempenho;
+        
+        Apresentação de uma modelagem do problema de particionamento aplicado à \wearables,\ buscando maior desempenho;
+        
+        \item 
+        % wearables e particionamento
+        %Introdução de sistemas computacionais \wearables\ na qual possuem restrições de consumo energético e recursos, utilizando uma plataforma FPGA como meio para análise de recursos alocados; 
+        Utilização de plataforma FPGA em sistemas \wearables\ com restrições energéticas e de recursos;
+        
+        
+        \item %Obtenção de pelo menos $9,6\%$ a mais de desempenho em três de quatros algoritmos avaliados, alocando $5,5\%$ de recursos de \hardware\ reconfigurável e aumento de $ 5,4\% $ de gasto energético;
+        Análise de desempenho de quatro algoritmos utilizando particionamento em \hardware\ considerando alocação de recursos e consumo energético.
+        
+        \item 
+        Análise de como as interfaces de comunicação entre \hs\ e otimizações influenciam no desempenho dos \wearables.
+        
+        %\item Os resultados mostram que com o uso da técnica de particionamento \hs\ em pedaços de código do \wearable,\ aumentou-se o desempenho do sistema pelo menos 2,2\%, chegando até em 41,6\% a mais em desempenho.
+    \end{enumerate}
+    
+    A pesquisa selecionou vários algoritmos do \wearable,\ sendo eles o Estatístico \Ss$_{Es}$, Lagrange \Ss$_{La}$, Números Primos \Ss$_{NP}$ e Risco \Ss$_{Ri}$ e para cada um realizou-se verificações de desempenho e gasto de recursos e energia, e com isso obteve-se uma melhora de desempenho em relação à sua versão em \software\ de 2,2\%, 41,6\%, 9,6\% e 17,8\% respectivamente.
+    
+    
+    
+    \section{Organização da Dissertação}
+        Os demais capítulos deste trabalho foram divididos da seguinte forma: 
+        No Capítulo \ref{chap:revisao_bibliografica} é apresentada uma revisão bibliográfica do problema com informações relevantes para o compreendimento. 
+        No Capítulo \ref{chap:relacionados} são descritos alguns trabalhos relacionados ao tema abordado. 
+        No Capítulo \ref{chap:design} é apresentado a metodologia. 
+        No Capítulo \ref{chap:prototipo} descreve o protótipo e o procedimento de testes.
+        No Capítulo \ref{chap:results} exibe e analisa os resultados e o Capítulo \ref{chap:conclu} conclui e apresenta os trabalhos futuros.
+
+
+
+
+
+
+
+
 \chapter{Referencial Teórico} \label{chap:revisao_bibliografica}
 
-Neste capítulo será descrito os principais conceitos necessários para o entendimento base dos fundamentos do trabalho, além de suas tecnologias e metodologias.
-
-\section{Unidade de Processamento Central para \Wearables}
-   Existem inúmeros tipos de processadores específicos para sistemas embutidos.
-   A classe de processadores mais baratos e de baixo gasto energético usufruem de arquitetura geralmente de 8, 16 ou 32 bits na qual podem executar centenas de milhões de instruções por segundo.
-   %
-   Outra classe é na utilização de processadores de ponta, na qual são integrados a videogames ou \textit{switches} de rede.
-   São processadores que possuem um custo elevado e executam uma taxa de bilhões de instruções por segundo, em comparação com o anterior.
-   %
-
-   Segundo \citet{Hennessy2011}, por mais que exista um leque de processadores para sistemas embutidos, o preço é um dos fatores mais importantes para a \design\ de um projeto, sendo tão importante quanto o requisito de desempenho pois necessita-se de um desempenho elevado a um preço reduzido.
-
-   Tais processadores possuem o fim de serem aptos a cumprir os requisitos de uma aplicação \wearable\ como por exemplo o requisito de tempo real, na qual um segmento da aplicação possui um tempo de conclusão máximo absoluto.
-   Outras situações também são permitidas, por exemplo um caso mais sutil na qual permite-se um tempo médio de restrição ao invés de um valor fixo, chamada de tempo real flexível.
-
-   Com o uso de sistemas processados, a aplicação é executada totalmente em nível de \software\ por meio de instruções. Ou seja, ela é construída/compilada e executada diretamente pelo processador ou por um sistema operacional que intermedeia a aplicação com o seu fim, não usufruindo de nenhum aprimoramento oriundo de aceleradores em \hardware.
-   %
-   Além disso, todo este conjunto de sistema deve-se ser planejado junto com a quantidade de memória disponível para uso no \wearable\ pois, sabe-se que, quanto maior os recursos de memória, maior o seu gasto energético.
-
+Neste capítulo serão descritos os principais conceitos necessários para o entendimento dos fundamentos do trabalho.%, além de suas tecnologias e metodologias.
 
 
 \section{\textit{Field-Programmable Logic Device} (FPGA)}
-	% uso de fpga no mundo
-	Até recentemente, os \hardwares\ reconfiguráveis eram utilizados unicamente na protitipação de projetos de circuitos integrados de aplicação especifica (ASIC, do inglês \textit{application-specific integrated circuit} e produção em baixo volume por causa de sua baixa velocidade e custo por unidade.
-	Entretanto, com a variedade desses dispositivos disponibilizados hoje no mercado, em conjunto com a elevação do custo de engenharia não recorrente (NRE, do inglês \textit{Nonrecurring Engineering}, que refere-se ao custo de pesquisa, \design, desenvolvimento e teste de um novo produto e exigências de mercado), houve um crescente interesse na utilização de FPGAs para sistemas embutidos devido suas vantagens sobre ASICs em termos de flexibilidade de projeto e custo zero de engenharia não recorrente citada \citep{Mei2000}.
+
+    Microcomputadores e sistemas digitais de sinais são sistemas que seguem instruções especificadas pelo seu \design.
+    Segundo \citet{tocci2003sistemas}, a maioria dos sistemas digitais convencionais do mercado atual não são implementados com portas lógicas individuais.
+    Em seu lugar, usa-se dispositivos de lógica programável que contêm circuitos para criar funções lógicas digitais.
+    Esses dispositivos não são programados da forma convencional seguindo uma lista de instruções estimuladas em suas entradas, mas em vez disso, seu sistema interno é configurado pelo ato de conectar e desconectar de forma eletrônica de pequenos circuitos.
+
 	%lousa branca
-	Tais dispositivos, juntos com sua plataforma de interação, de forma geral, permitem ao \designer\ de sistemas embutidos ter uma \textit{lousa branca} em que possa implementar \hardwares\ computacionais personalizados tão facilmente como o desenvolvimento de um \software, como foi possível ilustrar na Figura \ref{fig:rt-board}.
-
-	% Plataforma FPGA
-	Dessa forma, uma \textit{plataforma FPGA} é um chip na qual, além de conter o componente FPGA, este está integrado à inúmeras interfaces e componentes, desde LEDs (do inglês \textit{Light-Emitting Diode}) e \textit{switchs} até porta Ethernet e interface vídeo VGA (do inglês \textit{Video Graphics Array}) e seus respectivos circuitos e como possui recursos suficientes para circuitos complexos, é possível implementar funções de processamento de imagem, interfaces de rede, algoritmos criptográficos e processadores completo, cada projeto de acordo com os recursos por ela disponibilizados. %\citep{Plessl2003}
-	Entretanto, enquanto configurar um \hardware\ reconfigurável é uma tarefa fácil graças às ferramentas disponíveis hoje, criar um \design\ de \hardware\ inicial não é \citep{Sass2010}.
-
-	\begin{figure}[h] \centering
-		\includegraphics[width=0.75\textwidth]{img/rt-board.png}
-		\caption{Ilustração em alto nível do funcionamento interno do FPGA. Fonte: \cite{Sass2010}.}
-		\label{fig:rt-board}
-	\end{figure}
-
-	A seguir, será descrito a tecnologia que consiste os \hardwares\ reconfiguráveis, em especial o FPGA, e as respectivas linguagens de descrição de \hardware.
-
-%\subsection{Sua Tecnologia}
-   % PLD
-   %Para introduzir alguns conceitos, é importante destacar o que são os dispositivos lógicos programáveis (PLDs, do inglês \textit{Programable Logic Devices}).
-   %Às vezes chamados de dispositivos lógico programáveis em campo (FPLD, do inglês \textit{Field-Programmable Logic Device}), podem ser adaptados para criar muitos dispositivos digitais, desde simples portas lógicas até estruturas complexas.
-   %\citet{tocci2003sistemas, Plessl2003} dizem que com um investimento de capital pequeno, qualquer empresa pode comprar os \softwares\ de desenvolvimento e \hardware\ necessário para programar PLDs para seus projetos digitais.
-   %De modo geral, os PLDs são descritos como pertencendo a três tipo diferentes sendo eles os dispositivos lógicos programáveis simples (SPLD), dispositivos lógicos programáveis complexos (CPLDs, do inglês \textit{Complex Programmable Logic Devices}) e arranjo de portas programáveis em campo (FPGA) sendo o último tipo abordado neste trabalho \citep{Brown1996}.
-
-   %LUTS
-   O FPGA, item a ser utilizado nesta pesquisa, constitui de vários módulos lógicos programáveis relativamente pequenos e independentes, interconectados para criar funções maiores.
-   Cada módulo lida, normalmente, com até quatro ou cinco variáveis de entrada.
-   A maioria dos FPGAs utilizam uma \textit{look-up table} (LUT) para criar as funções lógicas desejadas.
-   Uma LUT funciona como uma tabela-verdade, no sentido que a saída é programada para criar a função combinacional armazenando valores verdadeiros e falsos adequado a cada combinação de entrada.
-   Os recursos de roteamento de sinal programável dentro do chip tendem a ser bem variados, com extensões de caminhos diferentes disponíveis.
-   Os atrasos de sinal em um projeto dependem do roteamento real de sinal selecionado pelo \software\ de programação.
-   Os módulos lógicos também contêm registradores programáveis.
-   Eles não são associados a nenhum pino de entrada e saída (I/O, do inglês \textit{Input and Output}).
-   Em vez disso, cada pino de I/O é conectado ao bloco programável de entrada e saída que, por sua vez, é conectado aos módulos lógicos com linhas de roteamento selecionadas.
-
-   \begin{wrapfigure}{O}{0.5\textwidth} \centering
-      \vspace{-10pt}
-      \includegraphics[width=0.5\textwidth]{img/rt-arch_fpga.jpg}
-      \vspace{-15pt}
-      \caption{Exemplo da arquitetura internas de um FPGA. Fonte: \url{http://www.eetimes.com/document.asp?doc_id=1274496}. Acesso: 30/05/2017.}
-      \label{fig:rb-arch_fpga}
-   \end{wrapfigure}
-
-   Uma arquitetura geral simplista de FPGA é exibido na Figura~\ref{fig:rb-arch_fpga}. Nela os quadrados menores situado nas laterais são blocos de I/O que podem ser configurados para fornecer recursos de entrada, saída ou bidirecionais.
-   Os quadrados maiores situados no interior são as LUTs, usados para guardar dados que entram ou saem e realizar as operações lógicas.
-   Os canais que interligam os blocos entre si são estabelecidas por meio de conexões que passam pelas linhas e colunas nos canais entre esses blocos e possuem a funcionalidade de serem interconexões programáveis \citep{tocci2003sistemas}.
-   %A tecnologia interna de um FPGA consiste basicamente de um arranjo de blocos lógicos, canais de roteamento para interconexão de blocos lógicos e blocos de entrada e saída de sinais em torno do circuito.
-   %FPGAs baseado em SRAM (do inglês \textit{Static Random Access Memory}) utilizam células SRAM para controlar a funcionalidade de blocos lógicos e entrada e saída de sinais bem como as rotas, e pode ser reprogramado arbitrariamente em nível de circuito, muitas vezes, baixando um novo \textit{stream} de dados de configuração para o dispositivo.
-   Hoje, esses dispositivos possuem milhões de portas de lógica programável, bilhões de transistores, além de outros blocos de \hardware\ dedicados dedicados como rápidas memórias embarcadas e multiplicadores de ponto-fixo tornando-o um dos circuitos integrados (CI) mais densos existente \citep{Choi2016}.
-
-   \begin{comment}
-   \begin{figure}[h] \centering
-      \includegraphics[width=0.5\textwidth]{img/rt-arch_fpga.jpg}
-      \caption{Exemplo da arquitetura internas de um FPGA. Fonte: \url{http://www.eetimes.com/document.asp?doc_id=1274496}. Acesso: 30/05/2017.}
-      \label{fig:rt-arch_fpga}
-   \end{figure}
+	O FPGA de forma geral é um \hardware\ reconfigurável que permite ao \designer\ de SE ter uma lousa branca em que possa implementar \hardwares\ computacionais digitais personalizados tão facilmente como o desenvolvimento de um \software, como ilustra a Figura \ref{fig:rt-board}.
+    
+    \begin{figure}[h] \centering
+        \includegraphics[width=0.9\textwidth]{img/rt-board.png}
+        \caption{Ilustração em alto nível do funcionamento interno do FPGA. Fonte: \citet{Sass2010}.}
+        \label{fig:rt-board}
+    \end{figure}
+    
+    % o que é um fpga
+    %LUTS
+    O FPGA constitui-se de vários módulos lógicos pequenos, programáveis, independentes e interconectados para criar funções maiores.
+    %Cada módulo lida, normalmente, com até quatro ou cinco variáveis de entrada.
+    Utilizam de \textit{Lookup Table} (LuT) para criar as funções lógicas desejadas.
+    Uma LuT funciona como uma tabela-verdade onde a saída é programada para representar a função combinacional, armazenando valores verdadeiros e falsos adequado a cada combinação de entrada.
+    %Os recursos de roteamento de sinal programável dentro do chip tendem a ser bem variados, com extensões de caminhos diferentes disponíveis.
+    %Os atrasos de sinal em um projeto dependem do roteamento real de sinal selecionado pelo \software\ de programação.
+    %Os módulos lógicos também contêm registradores programáveis.
+    %Eles não são associados a nenhum pino de entrada e saída (I/O, do inglês \textit{Input and Output}).
+    %Cada pino de I/O é conectado ao bloco programável de entrada e saída que, por sua vez, é conectado aos módulos lógicos com linhas de roteamento selecionadas.
+    Eles reduzem a lista de componentes necessários para o desenvolvimento do projeto, além de simplificar o protótipo, encurtar o ciclo de desenvolvimento e principalmente reduzem o tamanho e os requisitos de potência para o funcionamento do produto \cite{tocci2003sistemas}.
+    
+    
+    
+    \subsection{A Tecnologia Reconfigurável e a Plataforma de Manuseio}
+    
+        %arquitetura
+        Uma arquitetura simples de FPGA é exibido na Figura~\ref{fig:rb-arch_fpga}. 
+        Nela os quadrados menores situado nas laterais são blocos de I/O que podem ser configurados para fornecer recursos de entrada, saída ou bidirecionais.
+        Os quadrados maiores situados no interior são as LuTs, usados para guardar dados que entram ou saem e realizar as operações lógicas.
+        Os canais que interligam os blocos entre si são estabelecidas por meio de conexões que passam por linhas e colunas, e possuem a funcionalidade de serem interconexões programáveis \citep{tocci2003sistemas}.
+        %A tecnologia interna de um FPGA consiste basicamente de um arranjo de blocos lógicos, canais de roteamento para interconexão de blocos lógicos e blocos de entrada e saída de sinais em torno do circuito.
+        Hoje, esses dispositivos possuem milhões de portas de lógica programável, bilhões de transistores, além de outros blocos de \hardware\ dedicados como memórias embarcadas e multiplicadores de ponto-fixo, tornando-o um dos circuitos integrados (CI) mais densos existente \citep{Choi2016}.
+        Um projeto terá sucesso de sintetização se ele conseguir ser acordado à quantidade de recursos disponíveis do FPGA e executar rápido o suficiente para concluir seus objetivos sistêmicos \cite{coffman1999real}.
+    
+        \begin{comment}
+        \begin{wrapfigure}{O}{0.5\textwidth} \centering
+        %\vspace{-10pt}
+        \includegraphics[width=0.5\textwidth]{img/rt-arch_fpga.jpg}
+        %\vspace{-15pt}
+        \caption{Exemplo em baixo nível da arquitetura internas de um FPGA. Fonte: \url{http://www.eetimes.com/document.asp?doc_id=1274496}. Acesso: 30/05/2018.}
+        \label{fig:rb-arch_fpaga}
+        \end{wrapfigure}
 \end{comment}
+        
+        \begin{figure}[h] \centering
+            \includegraphics[width=0.65\textwidth]{img/rt-arch_fpga.jpg}
+            \caption{Exemplo em baixo nível da arquitetura internas de um FPGA. Fonte: \url{http://www.eetimes.com/document.asp?doc_id=1274496}. Acesso: 30/05/2018.}
+            \label{fig:rb-arch_fpga}
+        \end{figure}
+    
+    
+    
+        % uso de fpga no mundo
+        \Hardwares\ reconfiguráveis eram utilizados unicamente na prototipação de projetos de circuitos integrados de aplicação especifica (ASIC, do inglês \textit{Application-Specific Integrated Circuit} e produzido em baixo volume por causa de seu baixo desempenho e custo por unidade.
+        Mas com a variedade desses dispositivos disponibilizados hoje no mercado em conjunto com a elevação do custo de pesquisa, \design,\ desenvolvimento e teste e exigências de mercado, houve um crescente interesse na utilização de FPGAs para SE devido suas vantagens sobre ASICs em geral em termos de flexibilidade de projeto e custo e dessa forma dispositivos reconfiguráveis são a tecnologia-chave para o futuro dos sistemas digitais \citep{Mei2000, tocci2003sistemas}.
+        
+        % Importancia
+        \citet{tocci2003sistemas, Plessl2003} citam ainda que o motivo de \hardwares\ reconfiguráveis estarem dominando o mercado é o fato de que, como são dispositivos programáveis, a mesma funcionalidade pode ser obtida ao invés de diversos CI individuais.
+        Isso significa maior confiabilidade, menor espaço ocupado na placa, consumo de energia, complexidade de desenvolvimento e, geralmente, menor custo de fabricação.
+        
+        
+    
+        % o que é lut
+        Ao utilizar a tecnologia \lut,\ o FPGA torna-se versátil para comportar qualquer função digital e também ser eficiente para ser implementado em silício.
+        %O controle de entrada de sinais é usado como entrada lógica e o multiplexador de entradas é ligado ao nível lógico para implementar a função desejada \citep{coffman1999real}.
+        %
+        % o que a sintetização faz
+        A ferramenta de sintetização toma o HDL vindo do \designer\ e mapeia-o em \hardware.\ 
+        Primeiro o sintetizador irá minimizar equações lógicas removendo termos lógicos redundantes de acordo com seu sistema de optimização e com isso, o \design\ final do projeto será um grande conjunto de equações Booleanas que representa o sistema descrito pelo projetista \citep{coffman1999real}.
+       
+        
+        % tecnologia e energia
+        Segundo \citet{tocci2003sistemas}, tais maravilhas de flexibilidade de projetos digitais podem fornecer uma série de opções de projeto sendo voltados para indústria e até mesmo educação.
+        Ao utilizar tecnologia como CMOS e SRAM, o consumo de energia do chip é relativamente baixo comparado com outras tecnologias, podendo ser confeccionado em nível de tensão elétrica, frequências e cargas para os sinais de I/O.
+        O mercado fornece diferentes FPGAs com graus de velocidade variados a fim de que o projetista utilize o mais adequado ao projeto.
+        
+        FPGAs rápidos ou com maior número de recursos consequentemente são mais caros e por isso, escolher o FPGA adequado ao projeto também é necessário para obter um bom produto \cite{coffman1999real}.
+        %Entretanto, como um dispositivo FPGA pode ser configurado para um número infinito de projetos digitais, isso implica na não possibilidade de afirmar o montante de dissipação de energia para um dispositivo FPGA.
+        %O \software\ Quartus II tem duas ferramentas para estimular o montante de uso de energia para uma aplicação.
+        %O \textit{PowerPlay Early Power Estimator} é usado durante os estágios iniciais do projeto para estimar a magnitude de potência do dispositivo.
+        Dessa forma, FPGAs são chips que podem ser programados instantaneamente para funções de qualquer circuito digital \citep{Choi2016}.
+        
+        
+        
+        
+        % Plataforma FPGA
+        Uma plataforma FPGA é um chip que além de conter o componente FPGA, está integrado à inúmeras interfaces e componentes, desde LEDs (do inglês \textit{Light-Emitting Diode}) e \textit{switchs} até porta Ethernet e interface vídeo VGA (do inglês \textit{Video Graphics Array}) com seus respectivos circuitos.
+        Um exemplo de plataforma é exibido na Figura~\ref{fig:rb-arty}.
+        Como possui recursos suficientes para circuitos digitais complexos é possível sintetizar por exemplo funções de processamento de imagem, algoritmos de redes de computadores, algoritmos criptográficos e \textit{soft}-processadores completos \citep{Plessl2003}.
+        
+        \begin{figure}[h] \centering
+            \includegraphics[width=0.99\textwidth]{img/arty.png}
+            \caption{Exemplo de uma plataforma FPGA na qual constitui-se de uma placa com o FPGA e seus componentes de interação. Fonte: \url{http://www.xilinx.com/products/boards-and-kits/arty.html}. Acesso: 30/05/2018.}
+            \label{fig:rb-arty}
+        \end{figure}
+   
+   
+   
+    \subsection{Sintetização de Circuitos e Algoritmos no FPGA}
+    
+    %\subsection{\textit{Hardware Description Language} (HDL)}
+        Uma das principais formas de sintetização é utilizando linguagens da classe de Linguagens de Descrição de \Hardware\ (HDL, do inglês \textit{Hardware Description Language}).
+        HDL é uma das classes de linguagens de computação usados para descrever formalmente um circuito eletrônico por meio do comportamento temporal ou da estrutura espacial de circuito de um sistema eletrônico, originado pela necessidade de documentar o comportamento do \hardware\ \citep{Sass2010}.
+        
+        HDL é amplamente utilizada em \design\ de \hardware\ especificando os detalhes de \design\ para qualquer sistema digital, ou seja, tanto para desenvolvimentos de circuitos ASICs quanto para FPGAs.
+        Especificado o modelo comportamental de um circuito específico, antes ser projetado e construído, ferramentas lógicas de sínteses são invocadas para gerar informações estatísticas e geométricas que são utilizadas para verificar sua viabilidade.
+        %
+        Feita as análises, o código é entregue ao compilador lógico chamado de ferramenta de síntese, e sua saída será carregada ao dispositivo reconfigurável, ou seja para suas \luts.\ 
+        É possível alterar o código HDL, compilá-lo e fazer sua síntese no mesmo \hardware\ reconfigurável, quantas vezes forem necessárias, sem custo adicional, propriedade única fornecida pela tecnologia da lógica programável \citep{Smith1998}.
+        
+        Como a maioria dos FPGAs utilizam tecnologia SRAM, eles com isso tornam-se voláteis.
+        Isso significa que ao ser energizado, todas as informações de sintetização anteriores se perdem.
+        Para contornar este problema, exite também uma memória secundária que guarda as informações de programação que definem como cada bloco lógico comportará, quais blocos serão de entrada e saída, bem como como são as interconexões entre os blocos \cite{tocci2003sistemas}.
+                
+        Linguagens HDLs como \textit{VHDL} e \textit{Verilog} possuem um nível elevado de complexidade devido suas de naturezas serem linguagem de baixo nível \citep{Choi2016}.
+        E para a facilitação do processo de \design,\ existe outra classe de linguagens que permite a sintetização de projetos utilizando linguagens de alto nível \citep{Sass2010}.
+        Realizado uma especificação de \design\ em \software, uma Síntese em Alto Nível (HLS, do inglês \textit{High-Level Synthesis}) pode reduzir os longos ciclos do processo de \design\ de \hardware\ e ainda trazer melhoria em desempenho e eficiência energética \citep{Choi2016}.
+        Essas linguagens convertem seus códigos em alto nível para HDL e assim realiza-se a sintetização do projeto no \hardware\ reconfigurável.
+        
+        
+        %IP disponibilizados
+        Outro item importante na consideração de utilização de FPGA para projetos é a disponibilidade de módulos com propriedade intelectual (IP).
+        Este refere-se a projetos predefinidos de módulos complexos usados para satisfazer necessidades de funcionamento do projeto.
+        Tais blocos são disponibilizados pelas empresas fabricantes de FPGA ou por fontes terceiras proprietárias destes.
+        %
+        Dessa forma é possível utilizar módulos completos disponibilizados ou adquiridos a fim de tornar o sistema mais fácil para utilização e robusto.
+        Uma variedade de \cores\ IP são disponibilizados para uso em licenciamento barato, na qual são \citep{coffman1999real}:
+        \begin{itemize}
+            \item Microprocessadores, e \cores\ DSP;
+            \item Conversores digitais, GSM e outras formatos e frequências de rádio;
+            \item Codificações e decodificações de áudio e vídeo;
+            \item Encriptadores e decriptadores PGP e outros algoritmos simétricos e assimétricos;\
+            \item DCT, FFT, wavelet e outros cálculos de transformações;
+            \item Jogos, \cores\ educacionais e vários outros.
+        \end{itemize}
+        
+        Como o ciclo de vida para produtos está cada vez mais curto por causa do rápido desenvolvimento de tecnologia e recursos, é cada vez mais importante para os desenvolvedores encontrar maneiras de encurtar o ciclo de projeto e desenvolvimento de novos produtos.
+        Dessa forma, utilizar de recursos de IP diminuem o tempo necessário ao projetista para concluir seu produto.
+    
+    
+    
+    \subsubsection{Otimizações Automáticas de Projeto}
+    
+        %area e delay optimization
+        Segundo \citet{coffman1999real}, a sintetização também realiza otimizações com foco em \textit{delay} e área utilizada.
+        O processo é representado como um construtor automático de rotas a partir do HDL, isso é, existe várias formas de fazer a rota de um determinado circuito.
+        O processo de sintetização foca em realizar um roteamento que enquadra com os requisitos do \design,\ mesmo se existe a possibilidade de obter melhores resultados em tamanho de área consumida, recursos ou \textit{delay}.
+        O resultado da sintetização gerada é avaliada comparando se o sistema gerado é suficiente para ser executado sem erros e isso não significa que o resultado sintetizado gerado será de baixa qualidade pois o \design\ continuará respeitando os requisitos de tempo para seu funcionamento.
+        
+        Como os conceitos de área e \textit{delay} são inversos entre si, a sintetização mais rápida não buscará ser a menor em espaço e recursos utilizados, da mesma forma que e a busca pela menor área não significará a mais rápida sintetização.
+        O quão fácil será a tarefa de sintetização do projeto dependerá de vários fatores como a quantidade de recursos disponíveis do FPGA escolhido para uso, a tecnologia que o FPGA utiliza, os requisitos de velocidade sistêmicos e o \design\ descrito pelo projetista.
+    
+    
+    \subsubsection{Manipulação de Tamanho de Projeto Sintetizável}
+    
+        %manipulação de tamanho do recurso
+        A manipulação do projeto também é passo importante para a quantidade de recursos alocadas a este e qualquer mudança também é substancial.
+        Módulos que utilizam grande quantidade de recursos podem ser obter resultados diferentes de sintetização ao quebrar uma rotina em sub-rotinas menores, podendo fazer com que o recurso em \hardware\ fique menor e mais fácil de ser implementado.
+        %
+        Há três momentos que agregar sub-rotinas também são estratégias inteligentes. 
+        Se duas sub-rotinas tomam por exemplo, 25\% cada uma do tempo da aplicação, então elas são fortes candidatas para a implementação em \hardware\ pois usufruem de grande tempo de processamento e este pode ser trabalhado em nível de \hardware. 
+        No entanto, se forem implementadas individualmente, cada uma também necessita do custo da sua interface de comunicação com os módulos subsequentes à ela. 
+        Se há três sub-rotinas relacionadas (uma invocando a próxima), então a combinação delas pode reduzir o custo de invocações. 
+        %Entretanto, o custo da interface não é sempre insignificante e vale a pena o esforço do usuário para investigar a situação.
+        
+        Da mesma forma, implementações em \hardware\ têm desempenho significativo em usar formatos de dados de dados específicos à sua finalidade. 
+        %Para que o \software\ seja mais eficiente nos formato de dados não padronizados, programadores irão investir em estruturas de dados que não são bem mapeadas para o \hardware. 
+        Assim, é possível realizar a consideração dos tipos de dados para melhor adaptação ao projeto sintetizado evitando conversões entre níveis \hs\ e com isso explorar melhor o potencial do FPGA visando seu desempenho e recursos utilizados \cite{Sass2010}.
+        
+        
+    \subsubsection{Teste}
+        %projedo deve ser pequeno para grande
+        O projeto de circuito digital no FPGA deve ser feito a partir do seu modo mais simples, onde escreve-se os trechos de códigos, testá-lo e garantir que ele corresponda à seus requisitos básicos de funcionamento \citep{tocci2003sistemas}.
+        
+        %teste
+        O projetista realiza testes nos módulos construídos visando abordar todos os estímulos possíveis e verificar se a resposta se adéqua às entradas.
+        Dessa forma, ao garantir que as pequenas partes funcionam, ao conectá-los, tem-se que o conjunto deles também funcionarão \citep{tocci2003sistemas}.
+    
+    
+    
+    \subsection{CSoC}
+        É possível também realizar a integração de um controlador/processador à tecnologia FPGA.
+        Sistemas que possuem um sistema computacional integrado à uma única placa na qual inclui um FPGA possui o nome Sistema em Chip Configurável (CSoC, do inglês \textit{Configurable System on a Chip}).
+        
+        Ao utilizar deste sistema, a plataforma FPGA será constituída de uma arquitetura semelhante à exibida na Figura~\ref{fig:rb-soc} onde as setas representam os barramentos de comunicação entre os principais componentes.
+        
+        \begin{figure}[h] \centering
+            \includegraphics[width=0.7\textwidth]{img/into-soc.png}
+            \caption{Visão geral de um SoC FPGA.}
+            \label{fig:rb-soc}
+        \end{figure}
+    
+    
+        % Utilização de um processador sintético ou físico
+        A unidade de processamento central nesses tipos de sistemas pode ser utilizada/implementada de duas formas, sendo estas \textit{hard} e \textit{soft} \cores.
+        %
+        %hard
+        O processador \textit{hard core} é um \core\ fisicamente dedicado. Isso significa que é um um pedaço de CI que pode estar dentro do próprio circuito de um FPGA ou integrado à sua plataforma de componentes na qual possui um barramento para a comunicação.
+        Este sistema não utiliza de recursos do FPGA para a utilização do processador.
+        %soft
+        Já o processador \textit{soft core} é implementado por meio da sintetização e mapeamento de um modelo de um processador no FPGA.
+        Dessa forma, ao invés de ter um circuito de um processador independente dos componentes da plataforma, tem-se a sintetização deste dentro do FPGA por meio das \luts.\ 
+        Assim, o FPGA deve realizar a construção do sistema completo utilizando seus recursos de construção de circuitos digitais na qual passam pelo mesmo processo das demais sintetizações sendo elas \design\ mapeamento e sintetização na placa.
+        
+        Cada um tipo de \core\ possui suas vantagens.
+        Ao utilizar um \textit{hard} \core, é possível utilizar todos seus recursos obtendo máximo desempenho nas atividades executadas, a utilização de um \textit{soft} \core\ permite a extensão da arquitetura \citep{Plessl2003}.
+    
+    
+        \subsubsection{Processadores \textit{Soft Core}}
+        
+            %geral
+            Devido ao grande aumento do número de microprocessadores na qual podem ser integrados em vários SoC de grande porte que necessitam de robustez, percebeu-se que havia a necessidade de microprocessadores modificáveis. % \citep{kranenburg2010mb}.
+            %
+            Com o aumento da capacidade dos FPGAs foi possível a construção desses componentes tanto comerciais quanto \textit{open source} em sistemas SoC, utilizados em aplicações que variam desde computação paralela até rede de computadores \citep{kranenburg2010mb}.
+            
+            % hard e soft
+            Um processador \textit{hard core} fabricado não possui nenhuma forma de reconfiguração da lógica de seus dispositivos ASIC.
+            Qualquer mudança necessária num projeto desses dispositivos seria necessário realizar uma nova construção da máscara litográfica e uma nova fabricação deste, processo longo e custoso.
+            E também quando o sistema baseado em processador com suas instruções customizadas já foi mapeado em um ASIC, a única possibilidade de mudança da aplicação deveria ser realizada em nível de \software,\ alterando seu código.
+            %
+            Já processadores \textit{soft cores} integram a instrução customizada completamente em suas unidades de execução e são úteis se um determinado \hardware\ não é moldável como são os ASICs.
+            Utilizando FPGA como meio para esses SoC nos permite a reconfiguração da lógica interna de forma fácil rápida e barata, isso em qualquer estágio de construção do projeto \citep{rosinger2004connecting}.
+        
+            % vantagens do soft
+            Uma das vantagens do uso de um processador \textit{soft core} é a sua flexibilidade.
+            Essa propriedade de projetos de nível alto permite que projetista utilize apenas os recursos realmente necessários do processador para sua aplicação específica.
+            Além disso, essa característica também permite que esses processadores sejam facilmente integrados com módulo de IP resultando num processo mais rápido no desenvolvimento de um projeto e um produto final sólido \citep{rosinger2004connecting}.
+        
+        
+        
+        
+            %microblaze
+            MicroBlaze\texttrademark\ é uma família de configurações comerciais predefinidas de um RISC de 32 bits utilizados como módulo IP em desenvolvimento de projetos em FPGA com \textit{soft}-processadores. 
+            Ao adicionar o processador ao projeto, é possível utilizar \softwares\ de desenvolvimento que não necessitam de experiência prévia em \hardware\ reconfigurável para desenvolver aplicações para o processador MicroBlaze. 
+            O processador MicroBlaze atende aos requisitos de diversas aplicações, incluindo os mercados Industrial, Médico, Automotivo, Consumidor e de Comunicações pois ele possui configurações que suportam o comportamento para classes de processadores em tempo-real, para aplicações em geral e microcontrolador.
+            
+            % arquitetura
+            Ele possui um conjunto de instruções de 32-bit e registradores de propósito geral, além barramento de 32-bits, expansível par 64.
+            É possível também incluir unidade de ponto flutuante, permitindo o uso do processador adequando melhor ao projeto.
+            Possui suporte à \textit{pipeline} na decodificação de instruções, bem como suporte à interface de comunicação AXI \citep{obeidat2011microblaze}.
+            
+            
+            %microblaze e open source
+            Diferentemente de processadores \textit{open source}, MicroBlaze possui qualidade no componente disponibilizado, suporte e documentação disponíveis para o desenvolvedor.
+            Muito dos \designs\ \textit{open source} são difíceis de serem modificados devido sua complexidade, além da falta de uma metodologia de \design\ ou a ausência de documentação clara.
+            Além de que muitos destes processadores não são portáveis e funcionarão em modelos específicos de FPGAs.
+            %
+            Processadores comerciais são constantemente escolhidos para uso devido ao fato de terem um preço relativamente barato ao concorrentes e que estes podem ser facilmente acoplados à um projeto sintetizável em FPGA \citep{kranenburg2010mb, kranenburg2009reference, rosinger2004connecting}.
+            
+            Também é possível construir uma arquitetura básica de um MicroBlaze multi core.
+            Instancia-se vários MicroBlazes cada um com memória local privada e todos conectados ao barramento \textit{Open Core Protocol} (OPB) e com isso cada processador tem uma conexão \textit{full-duplex} com os outros MicroBlaze, e uma descrição da arquitetura é exibida na Figura~\ref{fig:rb-multi}  \citep{xu2008multi}.
+            
+            \begin{figure}[h] \centering
+                %\vspace{5pt}
+                \includegraphics[width=0.7\textwidth]{img/rb-multi-microblaze.png}
+                %\vspace{15pt}
+                \caption{Esquema de multi-MicroBlazes. Fonte: \citep{xu2008multi}.}
+                \label{fig:rb-multi}
+            \end{figure}
+            
+            
+            Há diferentes formas de conectar um módulo IP em um processador \textit{soft core}.
+            Cada aplicação pode ser realizada e implementada tanto como um algoritmo em \software\ quanto num \hardware\ estrutural como é exibido na Figura~\ref{fig:rb-mb-hs}.
+            Neste exemplo, uma mesma porção de código implementado tanto em \hs\ possui diferentes desempenhos.
+            Ao utilizar uma implementação em \software\ tem-se seu código sequencial executado pelo processador e na transformação deste em um módulo de \hardware\ pode executá-lo como um módulo dedicado e ainda aplicar otimizações de \hardware\ \citep{rosinger2004connecting}.
+            
+            \begin{figure}[h] \centering
+                \includegraphics[width=0.67\textwidth]{img/mb-hs.png}
+                \caption{Comparação hipotética de implementações em \software\ e \hardware\ com otimizações.}
+                \label{fig:rb-mb-hs}
+            \end{figure}
+            
+            Este também permite ao usuário escrever \textit{firmwares} customizados em Verilog e VHDL que atribui ao processador um barramento local permitindo que o projeto possua interface de comunicação com quase todos os dispositivos conectados como sensores, atuadores, sistemas heterogêneos providos externamente \citep{kranenburg2010mb}.
+        
+            Ao adicionar o processador \textit{soft core} MicroBlaze junto do barramento AXI, o projeto assistido pelo computado será semelhante ao circuito digital exibido pela Figura~\ref{fig:rb-mb}.
+            Exibe-se os blocos formados por módulos IP e seus componentes complementares necessários para o funcionamento básico do projeto como memórias e \textit{clocks}.
+            
+            \begin{figure}[h] \centering
+                \includegraphics[width=1.0\textwidth]{img/1-microblaze-axi.png}
+                \caption{Visão geral do MicroBlaze com o barramento AXI já integrado ao projeto.}
+                \label{fig:rb-mb}
+            \end{figure}
+        
+        
 
-   % tecnologia e energia
-   Segundo \citeauthor{tocci2003sistemas}, tais maravilhas de flexibilidade de projetos digital podem fornecer uma série de opções de projeto sendo voltados para indústria e até mesmo educação.
-   Ao utilizar tecnologia CMOS, o consumo de energia do chip é relativamente baixo comparado com outras tecnologias podendo ser confeccionado em nível de tensão elétrica, frequências e cargas para os sinais de I/O.
-   O mercado fornece diferentes graus de velocidade de FPGA a fim de que o projetista utilize o mais adequado ao projeto.
-   Entretanto, um dispositivo FPGA pode ser configurado para um número infinito de projetos e isso implica na não possibilidade de afirmar o montante de dissipação de energia para um dispositivo FPGA.
-   %O \software\ Quartus II tem duas ferramentas para estimular o montante de uso de energia para uma aplicação.
-   %O \textit{PowerPlay Early Power Estimator} é usado durante os estágios iniciais do projeto para estimar a magnitude de potência do dispositivo.
-   Dessa forma, FPGAs são chips que podem ser programados instantaneamente para funções de qualquer circuito digital \citep{Choi2016}.
-
-   % Importancia
-   \citeauthor{tocci2003sistemas, Plessl2003} citam ainda que o motivo de PLDs estarem dominando o mercado é o fato de que, como são dispositivos programáveis, a mesma funcionalidade pode ser obtida com um circuito integrado (CI) ao invés de diversos circuitos individuais.
-   Isso significa maior confiabilidade, menor espaço ocupado na placa, consumo de energia, complexidade de desenvolvimento e, geralmente, menor custo de fabricação.
-
-   %\subsection{\textit{Hard} e \textit{Software Cores}}
-   % Utilização de um processador sintético ou físico
-   A unidade de processamento central (CPU, do inglês \textit{Central Processing Unit}) nesses tipos de sistema pode ser implementada em duas formas, sendo estas \textit{hard} e \textit{soft} \cores.
-   O primeiro é um \core\ dedicado, ou seja, um pedaço de circuito integrado dentro (ou não) de um FPGA e o segundo é feito por meio da sintetização e mapeamento de um processador no FPGA com seus recursos lógicos, e assim, o processador é obtido por meio de \design\ e sintetização na placa por meio das portas lógicas.
-   Independente da forma de projeto da CPU, o FPGA será constituído da seguinte arquitetura exibida na Figura~\ref{fig:rb-soc}, chamada de SoC FPGA (do inglês, \textit{System-on-Chip} FPGA).
-   Nela, as setas representam os barramentos de comunicação entre os principais componentes.
-
-   \begin{figure}[h] \centering
-      \includegraphics[width=0.6\textwidth]{img/into-soc.png}
-      \caption{Visão geral de um SoC FPGA.}
-      \label{fig:rb-soc}
-   \end{figure}
-
-   Cada um tipo de \core\ possui suas vantagens.
-   Ao utilizar um \textit{hard} \core, é possível utilizar todos seus recursos obtendo máxima performance nas atividades executadas, a utilização de um \textit{soft} \core\ permite a extensão da arquitetura \citep{Plessl2003}.
-
-   Um das maiores barreiras para o \design\ de projetos em FPGA é a necessidade de uso de linguagens de descrição de \hardware.
-   Elas serão descritas a seguir.
 
 
-	\subsection{\textit{Hardware Description Language} (HDL)}
-		Linguagem de Descrição de \Hardware\ (do inglês \textit{Hardware Description Language}) é uma das classes de linguagens de computação usados para descrever formalmente um circuito eletrônico.
-      Uma expressão padrão baseada em texto HDL é capaz de descrever o comportamento temporal ou a estrutura de circuito (espacial) de um sistema eletrônico.
-      Sua origem veio da necessidade de documentar o comportamento do \hardware \citep{Sass2010}.
-
-		HDL é amplamente utilizada em \design\ de \hardware\ especificando detalhes de \design\ de chip tantos chips específicos quantos os próprios FPGAs.
-      Para customizar algum tipo de chip digital, HDLs especifica um modelo para um comportamento específico de um circuito antes do circuito ser projetado e construído.
-      Ferramentas lógicas de sínteses são invocadas em seguida para gerar informações geométricas que são utilizadas para produzir as máscaras \textit{photolithographic}, necessárias para a fabricação do CI do projeto desenvolvido.
-
-		A utilização de uma HDL é o primeiro passo no processo de síntese em FPGA.
-      O código é entregue ao compilador lógico, chamado de ferramenta de síntese, e sua saída será carregada ao dispositivo reconfigurável.
-		A propriedade única deste processo na qual fornece a lógica programável é que, com esse processo de síntese, é possível alterar o código HDL, compilá-lo e fazer sua síntese no mesmo dispositivo para testar, quantas vezes forem necessárias, sem custo adicional \citep{Smith1998}.
-
-		Enquanto a maioria de engenheiros de \hardware\ utilizam tanto o \textit{VHDL} quanto o \textit{Verilog}, na qual possuem um nível elevado de complexidade \citep{Choi2016}, existe outras linguagens disponíveis para uso.
-      Outras linguagens como \textit{SystemC}, \textit{HandelC} e \textit{Impulse} fornecem a construção de sistemas \hs\ juntos, dando ao \designer\ uma linguagem de alto nível para manuseio do projeto \citep{Sass2010}.
-
-
-	\subsection{\textit{High-Level Synthesis} (HLS)}
-		Sintetizador em Alto Nível (HLS, do inglês \textit{High-Level Synthesis}) são procedimentos que sintetizam códigos em alto nível para HDLs.
-
-		Realizado uma especificação de \design\ em \software, um HLS pode reduzir os longos ciclos do processo de \design\ de \hardware\ e ainda trazer melhoria em performance e eficiência energética \citep{Choi2016}.
-
-		As primeiras ferramentas sintetizadoras baseavam em linguagem \textit{C}, mas não houveram um sucesso em seu uso pois os engenheiros de \hardware\ acreditavam que existia uma lacuna entre o HLS e o \design\ de \hardware\ feito por humanos.
-      A justificativa era que as ferramentas HLS não exploravam profundamente o recurso de paralelismo, além de que, para os engenheiros de \software\ HLS continua sendo uma dificuldade já que muitas partes do projeto, como a integração do sistema, permanecem em grande parte como um processo manual.
-
-      Existem várias ferramentas para geração automática de código descritivo de \hardware.
-      Ferramentas como o \textit{framework} LegUp e OpenCL \citep{Trevett2008} possuem o propósito de entregar um bom HLS além de tentar amenizar esses problemas de projetos.
-
-
-      \subsubsection{LegUp High-Level Synthesis}
-         LegUp é uma ferramenta que permite a utilização de técnicas de \software\ para implementação de \design\ de \hardware.
-         Com o \textit{framework} LegUp, é possível utilizar um programa padrão  C como entrada e automaticamente compila o programa para dispositivos FPGA.
-
-         É possível gerar procedimentos totalmente dispostos em \hardware\ e outros híbridos na qual é utiliza-se de \textit{soft} processadores, utilizando de um MIPS, e também gerando códigos para \textit{hard} processador que utiliza circuitos ARM disponibilizados em FPGAs SoCs pela Altera sendo tais gerações usufruindo de aceleradores que comunicam por meio de interface de barramentos padronizados \citep{Canis2011}.
-         Possui também um \textit{framework} para \textit{debug} e verificação de HLS \citep{Fort2014}.
-
-      \subsubsection{OpenCL}
-         OpenCL é um padrão que oferece uma API comum para execução de programas em sistemas compostos por diferentes tipos de dispositivos computacionais tal como processadores \textit{multicores}, GPUs ou outros aceleradores.
-
-         Este padrão utiliza de coprocessadores como meio para operações aritméticas intensivas paralelas e com isso é possível realizar realizar uma computação heterogênea paralela em nível de tarefas e dados, nos vários dispositivos disponíveis hoje pelo mercado criando um novo nível de infraestrutura computacional paralela.
-
-         O OpenCL provê uma abstração fácil de uso e um amplo conjunto de APIs de programação baseada no sucesso obtido pelo CUDA (do inglês, \textit{Compute Unified Device Architecture}) e outros ferramentas de programação.
-         Ele define um \core\ funcional que todos os dispositivos suportam incluindo uma mecanismo de extensão que permite os fabricantes exponham recursos de \hardware\ exclusivos e interfaces de programação experimentais para benefícios dos desenvolvedores de aplicações.
-
-         De forma geral, um programa em OpenCL é executado num dispositivo computacional na qual os dispositivos podem conter um ou mais unidades computacionais (ou seja, \cores) na qual são compostas de um ou mais elementos de processamento SIMD (do inglês, \textit{single-instruction multiple-data}) \citep{Stone2010}.
-         Como é possível visualizar na Figura \ref{fig:opencl}, levando para o ambiente de FPGAs, existe um \textit{host} que executa em um processador \textit{soft} ou \textit{hard} o \textit{ Runtime Environment} que fica responsável por controlar todos seus dispositivos.
-         Cada dispositivo conectado ao \textit{host} pode conter vários \textit{processing elements} que por sua vez pode conter vários \textit{compute unit}.
-         %De termos gerais, podemos associar com os conhecimentos de \software\ sendoos \textit{compute units} como \textit{threads}, \textit{processing elements} como \cores\ e os dispositivos como \textit{clusters}, sendo estes podendo ser heterogêneos.
-
-         \begin{figure}[h] \centering
-            \includegraphics[width=0.7\textwidth]{img/opencl.jpg}
-            \caption{Sistema hierárquico de um projeto em OpenCL. Fonte: \url{https://handsonopencl.github.io/} Acessado em: 07/08/2017.}
-            \label{fig:opencl}
-         \end{figure}
-
-         Todos os aceleradores descritos neste relatório, podem ser associados com a sintetização dos procedimentos de instruções no FPGA \citep{Shagrithaya2013, Czajkowski2012}.
-
-   		Para prover um melhor suporte para o paralelismo em \hardware, utilizaram de bibliotecas \textit{multi-threads} como a \textit{Pthread} \citep{Barney2009}, \textit{OpenMP} \citep{openmp} para criar aceleradores em \hardwares paralelos.
-
-         É investigado otimizações em memória e arquitetura de sistema provendo melhorias em performance de circuito, área, utilizando uma abordagem do padrão produtor-consumidor para inferir circuito de transmissão em \hardware.
-
-   \begin{comment}
-   \section{Beagle Bone Black}
-      Segundo \citet{Richardson2013}, além de um microcontrolador, o Beagle Bone Black é úm computador completo no qual possui suporte a sistemas como Linux Embarcado e Android, possuindo todos os componentes eletrônicos necessários para o seu funcionamento numa única placa impressa.
-      Ao utilizar um sistema operacional embarcado, a placa torna-se hábil para suportar \textit{drivers} como periféricos USB e adaptadores podendo então ser adicionados módulos como câmera para captura de imagens e quaisquer outros adaptadores.
-
-      Diferente de um típico microcontrolador que possem processadores de 8-bits, o Beagle Black Bone é capaz de compartilhar em seus processamentos em tarefas e programas, executados simultaneamente, criando um poder de processamento maior do que outros controladores sem o \textit{trade-off} do espaço\textit{die}.
-
-
-      Este equipamento é voltado tanto para iniciantes com foco em aprendizagem no mundo de microcontroladores e sistemas embarcados, quanto usuários com conhecimentos avançados a fim de produzir produtos para fins mercadológicos.
-
-      O autor \citet{Richardson2013} cita ainda que, ao comparar o Beagle Bone Black com o Raspberry Pi, o primeiro se destaca no fato de ser um produto com as características mais adequadas para fins profissionais, ou seja desenvolvimento de sistemas embarcados para projeto de produtos, o que não acontece nos dispositivos Raspberry Pi. Esses, por sua vez, possui o propósito de ser simples e didático, sendo seu \hardware\ e sistema voltados para tal.
-\end{comment}
-
-
+\begin{comment}
 \section{\Profile} \label{sec:profile}
-	%\begin{comment}
-	%\end{comment}
 
 		\Profile\ é uma procedimento para auxiliar o usuário a coletar informações do \software\ em tempo de execução.
       Existem vários programas diferentes para adquirir essas informações e podem ser distinguidos em duas categorias.
@@ -232,102 +446,246 @@ Each sample counts as 0.01 seconds.
 		Uma das técnicas do \profile\ de mensurar uma aplicação é na realização de interrupções periódica no programa e amostrar o seu \textit{program counter}.
       Dessa forma, é possível utilizar um histograma para contar quando um programa é interrompido em um endereço particular e a partir dessa informação, calcular a fração aproximada do tempo total de execução gasto em suas partes.
       Distribuições GNU/Linux possuem a ferramenta \texttt{gprof} na qual avalia procedimentos enviados por parâmetro, realizando o cálculo de tais informações de \software\ \citep{Graham1982}.
-
-
+\end{comment}
 
 
 
 \section{Sistemas Computacionais \Wearables}
-	% Introdução histórica e geral
-	Sistemas computacionais \wearables\ são sistemas que, com a possibilidade de ter um computador acoplado ao corpo, proporciona ao usuário um nível superior de informações contextualizadas dentro de um ambiente interativo \citep{Amorim2017}.
 
-   Com a tecnologia digital constantemente melhorando à medida que a informação se torna sem-fio, os avanços demandaram mais fatores móveis e \wearable\ de produtos que possuem acesso à informação.
-   Segundo \cite{Gemperle1998}, um produto que é \wearable, deveria ter sua `\textit{wearability}' sendo este definido como a interação entre o corpo humano e o objeto \textit{wearable} estendendo ao corpo em movimento.
+    %\subsection{Definição}
+    
+        \citeauthor{starner1996human} em \citeyear{starner1996human} descreveu sistemas computacionais \wearables\ como sistemas que são caracterizados pela sua habilidade de reconhecer o ambiente ao seu redor e comportamentos de seus usuários bem como a situação que os envolvem, e que com esse nível de acesso à informação computacional, revolucionará como os computadores seriam usados.
+        Mesmo que esses sistemas ainda eram volumosos e inconvenientes por conta de vários fatores, vários cientistas sustentam essa definição base sobre dispositivos \wearables.\ 
+    
+        %computadores acoplado ao corpo
+        %introdução de que são cheio de sensores e atuadores
+        Segundo \citet{Amorim2017, billinghurst1999wearable}, sistemas computacionais \wearables\ são sistemas que com a possibilidade de ter um computador acoplado ao corpo, proporcionam ao usuário um nível superior de informações contextualizadas dentro de um ambiente interativo, podendo ser qualquer dispositivo desde sistemas integrados ao pulso do usuário até mochilas com computadores embutidos.
+        Ou seja, são sistemas carregados de sensores e atuadores, acoplados ao corpo, e que proveem medição contínua de parâmetros fisiológicos do usuário ou do seu ambiente ao redor \citep{son2014multifunctional}.
+        %
+        %deve ser usado em roupa
+        % locais que podem ser usados
+        %tipo de informações coletadas
+        \citet{arias2015privacy} cita que a tecnologia \wearable\ utiliza do pressuposto que deve ser usada em roupas ou acessórios e faz parte de um grande movimento também referenciado como auto quantificado (do inglês \textit{quantified self}).
+        Isso refere-se ao autoconhecimento através de números, propriedade permitida pelo seu uso.
+        
+        Definições mais formais como a de \citet{Gemperle1998} diz que um produto só pode ser considerado \wearable\ se ter a propriedade chamada `\textit{wearability}', sendo esta definida como a interação entre o corpo humano e o objeto \wearable\ estendendo-o em movimento devido à necessidade de movimentação do usuário.
+        Esta mesma propriedade está relacionada a objetos mundanos que usamos cotidianamente como roupas e acessórios que não são inteligentes.
+        %
+        \citet{VanLaerhoven2002} afirmam que a distribuição de elementos computacionais como sensores em objetos mundanos em nosso cotidiano adéqua-se à pesquisa denominada por computação ubíqua e que isso também aplica à computação \wearable,\ uma vez que superfícies de roupas também pode ser uma plataforma de suporte ideal para uma grande quantidade de sensores sendo que estes devem ser miniaturizados para que eles não obstruam seu usuário em seu uso.
+        %
+        Já \citet{Jozwiak2017} define e caracteriza um sistema computacional \wearable\ como um sistema \textit{cyber}-físico móvel autônomo.
+        Em outras palavras \textit{cyber-} é uma combinação dos termos `dispositivo computacional', `rede de computadores' ou `realidade virtual' com um segundo termo, no caso o `físico' oriundo de circuitos.
+        
+        
+        
+        %falando + de sensores e atuadores
+        Sensores provem um sistema nervoso para detectar sinais.
+        Para dispositivos \wearables\ passivos, a existência de sensores é essencial.
+        Já atuadores agem uma vez detectado sinais de forma autônoma ou a partir de uma unidade central de controle e assim sendo elementos essenciais para um dispositivo inteligente ativo \citep{starner1996human}.
+        %
+        Isso significa que tais dispositivos registram e reportam informações sobre o ambiente situado, podendo ser desde avaliação de atividades físicas até padrões de sono.
+        Esses dispositivos podem educar e motivar indivíduos a fim de terem melhores hábitos, saúde e segurança, por exemplo \citep{patel2015wearable}.
+        %
+        As informações coletadas podem variar desde um simples batimento cardíaco e dados de temperatura e umidade até dados sensíveis como a localização atual do próprio usuário e seus hábitos cotidianos de vida.
+        
+        
+        %sistema wearable
+        É exibido na Figura~\ref{fig:into-wearable} uma ilustração de um sistema \wearable\ hipotético composto por vários itens como 
+        sensores espalhados em seu corpo que ao movimento do usuário são estimulados e geram informações à central, ou 
+        componentes atuadores \textit{piezo-electric} integrados ao sapato energizando o sistema \wearable\ com o caminhar \citep{VanLaerhoven2002, Kern2002, Kymissis1998}.
+        
+        \begin{figure}[h] \centering
+            \includegraphics[width=0.66\textwidth]{img/into-wearable2.png}
+            \caption{Exemplificação de alguns tipos de dispositivos \wearables.\ Fonte: \citet{Plessl2003}.}
+            \label{fig:into-wearable}
+        \end{figure}
+        
+        
+        
+        \begin{comment}
+        %desempenho
+        Sistemas \wearables\ executam de tarefas de computação intensiva que consideram restrições de tempo-real onde não realizando-as, o sistema torna-se inaplicável.
+        Assim, requere-se um desempenho que seja viável para a execução de suas tarefas.
+        % energia
+        Da mesma forma, é essencial em um sistema manter-se ativo e funcional num certo período de tempo.
+        O \design\ do gasto de energia de um sistema conduz inúmeros desafios e gerenciar esse gasto energético também é um item a ser considerado na construção de um produto.
+        Ao alterar os padrões de desempenho de um sistema, seu padrão energético também é alterado \citep{Plessl2003}.
+\end{comment}
+     
+    
+    \subsection{Características Funcionais de um \Wearable}
+    
+        A caracterização de um dispositivo computacional \wearable\ é feita acordando as classificações pré-estabelecidas relacionadas à suas funcionalidades e requisitos de \hardware.
+        
+        O mercado possui um número considerável de dispositivos \wearables\ que são utilizados em inúmeras áreas, e mesmo que cada equipamento separado tenha suas próprias características, muitas soluções em \hardware\ compartilham uma arquitetura e organização interna de recursos implementados comum.
+        Esses detalhes também podem ser expandidos às características relativas à recursos de sistemas operacionais, no qual dispositivos \wearables\ podem ser classificados além de seus componentes de \hardware\ internos como suas funções de desempenho \citep{Delabrida2016, Amorim2017}, como representado pela Figura \ref{fig:classification}.
+        
+        \begin{figure}[h] \centering
+            %\vspace{5pt}
+            \includegraphics[width=0.97\textwidth]{img/rt-gradiente.png}
+            %\vspace{15pt}
+            \caption{Classificação de sistemas \wearables. 
+                De um extremo existe os dispositivos dependentes de interfaces de usuário e do outro os dependentes de entrada e saída de sinais enquanto entre eles, a gama de combinações possíveis. Fonte: Adaptado de \citep{Amorim2017}.}
+            \label{fig:classification}
+        \end{figure}
+        
+        De um lado existem os dispositivos dependentes de interfaces de usuário que possuem alta dependência de operações que fazem referência à comunicação de informação e interação ao usuário sobre sua situação, dessa forma, tais dispositivos provê respostas sobre as interações do usuário.
+        Focam principalmente em tarefas para renderização em \textit{displays} como por exemplo equipamentos de realidade virtual e aumentada para implementação de objetos tridimensionais.
+        
+        De outro lado, existem os dispositivos dependentes de entrada e saída de sinais. 
+        Atuam principalmente com o estímulo por algum dado oriundo de outro dispositivo ou do ambiente situado, enviando este dado interpretado à uma nuvem respeitando restrições de tempo-real.
+        Isso se da pela utilização de sensores acoplados ao \wearable\ que podem exigir uma boa vazão de dados e pequena latência como são os monitores de atividade remota, situação na qual cria-se o ambiente perfeito para o termo conhecido por IoT (do inglês \textit{Internet of Things}).
+        
+        Entre dispositivos dependentes de interfaces de usuário e dispositivos de entrada e saída de sinais existe os dispositivos que possui a característica de serem híbridos. 
+        São dispositivos que sua natureza é executada sobre características de ambos os extremos citados.
+        Dispositivos como \textit{smartwatches} e \textit{fitness trackers} são exemplos de tais dispositivos híbridos, onde possuem restrições de equalização à prioridade dada pelo dispositivo para ambas as operações de interface com o usuário e manipulação de sinais de entrada e saída.
+        
+        A separação dos conceitos computação \wearable\ e IoT ainda não estão claros segundo a bibliografia científica.
+        Sistemas operacionais de propósito específico para ambientes \wearable\ são comumente focado em um único tipo de seguimento de produto como os \textit{smartwatches}, sendo que proporciona aos desenvolvedores um meio para sua aplicação final além de entregar um produto de alta qualidade.
+        Também, atualmente, não existe nenhum sistema que satisfaça todos os requisitos apresentados \citep{Amorim2017}.
+        
+        
 
-	\begin{wrapfigure}{O}{0.5\textwidth} \centering
-    	  \vspace{-10pt}
-		\includegraphics[width=0.5\textwidth]{img/into-wearable2.png}
-        \vspace{-10pt}
-		\caption{Exemplificação de alguns tipos de dispositivos \wearables. Fonte: \citet{Plessl2003}. \vspace{-15pt}}
-		\label{fig:into-wearable}
-	\end{wrapfigure}
+    
+    \subsection{Miniaturização e Consumo Energético}
+    
+        %introdução
+        O meio científico já estuda \wearables\ há várias décadas como é reportado em trabalhos científicos de \citet{Sutherland1968}, \citet{Mann1996} e \citet{Mann1997}.
+        Entretanto, sua comercialização só foi realizada após a miniaturização dos componentes eletrônicos bem com a melhoria na eficiência energética dos mesmo.
+        Esse fenômeno fica claro na percepção do crescente espaço ganho recentemente pelos \textit{smartwatches}, \textit{fitness trackers}, óculos inteligentes, equipamentos de realidade virtual e aumentada e outros nas indústrias e nas atividades pessoais de usuários.
+        
+        %tamanho e qualidade
+        Essa restrição de tamanho geralmente significa que a própria qualidade do equipamento também está comprometida, o que leva ao projetista utilizar de muitos atuadores e sensores simplistas no \design\ de um novo produto \citep{VanLaerhoven2002}.
+        
+        Dispositivos móveis necessitam de sistemas de energização inteligente para seu funcionamento.
+        %
+        Entretanto, baterias adicionam ao seu projeto tamanho, peso e inconveniência.
+        Sobre isso, várias pesquisas foram realizadas de forma a aproveitar o consumo de energia para que o produto possa operar por um período de tempo maior e com a interação mais fluída com o usuário \citep{starner1996human}.
+        
+        
+        Também existe sistemas \wearables\ que são construídos por meio de \textit{electronic textiles}, também conhecidos como, \textit{e-textiles} na qual são fabricações que interconectam eletrônicos em tecidos.
+        É possível entregar um produto fisicamente flexível e um tamanho que tipicamente não pode ser alcançado facilmente com outras técnicas de fabricação eletrônicas.
+        Com esse tipo de construção, os componentes e suas interconexões são menos visíveis e não suscetíveis a se emaranhar em objetos ao seu redor ou atrapalhar a experiência do usuário.
+        Também são facilmente adaptados às rápidas mudanças em tecnologias computacionais e sensoriais de aplicações específicas \citep{starner1996human}.
+        
+        
+        %Comunicação
+        Como seu sistema pode ser composto por um conjunto de nós distribuídos, utiliza-se de uma rede de comunicação centralizada num módulo principal realizando a troca de informações entre esses dispositivos.
+        Quanto mais dispositivos e componentes como sensores e atuadores conectados no projeto, mais a comunicação torna-se necessária para projeto do sistema e consequentemente mais complexo ele fica.
+        Com isso, tem-se então um computador embarcado em um ambiente \mobile\ interagindo com o ambiente ao seu redor, e caso o sistema possua vários nós, a comunicação sem-fio tende a ser a tecnologia predominante por causa da necessidade de mobilidade \citep{Plessl2003,VanLaerhoven2002, Kern2002, Kymissis1998}.
 
-	%\citep{Plessl2003}
-	Devido ao movimento de seus usuários, um computador \wearable\ é embutido em um ambiente \mobile\ e necessita-se da interação com o ambiente ao seu redor.
-	Como é exibido na Figura \ref{fig:into-wearable}, um sistema \wearable\ pode ser composto por um conjunto de nós distribuídos e uma rede de comunicação centralizada num módulo principal, sendo possível determinar, por exemplo, a geração de eletricidade por meio de geradores \textit{piezo-electric} integrados aos sapatos, energizando uma parte do sistema \wearable\ com o caminhar do usuário \citep{Kymissis1998} ou a ação do usuário por meio de acelerômetros \citep{VanLaerhoven2002, Kern2002}.
-
-	Com a distribuição espacial dos módulos pelo corpo, a comunicação torna-se um item importante em termos consumo de energia \citep{Kymissis1998}.
-   A rede de comunicação é uma mistura de conexões cabeadas e sem-fios.
-   Para dispositivos \wearables, a comunicação sem-fio é a tecnologia predominante por causa da necessidade de mobilidade \citep{Plessl2003}.
-
-	A introdução desses sistemas no ambiente de pesquisa não é nova como é reportado por \citet{Sutherland1968}, \citet{Mann1996} e \citet{Mann1997}.
-   Entretanto, a aplicação desses dispositivos, depende diretamente da miniaturização dos componentes eletrônicos.
-   Esse fenômeno fica claro ao perceber o crescente espaço ganho pelos \textit{smartwatches}, \textit{fitness trackers}, óculos, equipamentos de realidade virtual e aumentada e muitos outros nas indústrias e nas atividades pessoais de usuários.
-   Com esses novos dispositivos embarcados de propósito geral miniaturizados, aumenta-se a sua atração devido à fácil disponibilidade dos dispositivos, baixo preço e ferramentas de desenvolvimento disponíveis para desenvolvimento de aplicações específicas incluindo compiladores e sistemas operacionais para tal, mas não são otimizados para uso \wearable.
-	Isso pois, como \citeauthor{Plessl2003} cita, muitos dos sistemas \wearables\ construídos possuíam características diferentes de componentes que prestam auxílio à tarefas pessoais de usuários, citados anteriormente.
-	Exemplos são o uso dados de teclados ou canetas para entrada de dados ou um \textit{display} LCD, na qual contradiz com o paradigma de operações \textit{hands-free} e a propriedade de computação \wearable\ discreta.
-	Sistemas de computação distribuídos no corpo construídos a partir desses equipamentos interativos são altamente ineficientes devido à falta de especialização de componentes individuais de propósito específico.
-	Dessa forma, a computação \wearable, seguindo esse conceitos, se define muito bem como um subconjunto de sistemas embutidos.
-
-	% Característica de um dispositivo wearable
-	\subsection{Característica de um \Wearable}
-		Entendido a localização de sistemas \wearable\ sobre sistemas computacionais, a caracterização de um dispositivo \wearable\ é feita acordando as classificações pré-estabelecidas em relação à suas funcionalidades e requisitos de \hardware.
-      O mercado possui um número considerável de dispositivos \wearables\ que são utilizados em inúmeras áreas, e mesmo que cada equipamento separado tenha suas próprias características, muitas soluções em \hardware\ compartilham uma arquitetura e organização interna de recursos implementados comum.
-		Esses detalhes também podem ser expandidos às características relativas à recursos de sistemas operacionais, no qual dispositivos \wearables\ podem ser classificados além de seus componentes de \hardware\ internos como suas funções de performance \citep{Delabrida2016, Amorim2017}, como representado pela Figura \ref{fig:classification}.
-
-		\begin{figure}[h] \centering
-			\vspace{-5pt}
-			\includegraphics[width=0.9\textwidth]{img/rt-gradiente.png}
-			%\vspace{-10pt}
-			\caption{Classificação de sistemas \wearables. De um extremo existe os dispositivos dependentes de interfaces de usuário e do outro os dependentes de entrada e saída de sinais enquanto entre eles, a gama de combinações possíveis. Fonte: Adaptado de \citep{Amorim2017}.}
-			\label{fig:classification}
-		\end{figure}
-
-		De um lado desta gama de dispositivos existem os \emph{dispositivos dependentes de interfaces de usuário} que possuem alta dependência com operações interfaces gráficas, provendo respostas sobre as interações do usuário.
-      Esses dispositivos focam principalmente em tarefas para renderização em \textit{displays} como por exemplo equipamentos de realidade virtual e aumentada para implementação de objetos tridimensionais.
-      %
-		De outro lado, existem os \emph{dispositivos dependentes de entrada e saída de sinais}. Esses dispositivos atuam principalmente com o estímulo por algum dado oriundo de outro dispositivo ou do ambiente assim entregue à nuvem respeitando restrições de tempo real.
-      Isso se da pela utilização de sensores acoplados ao dispositivo que podem exigir uma boa vazão de dados e pequena latência como são os monitores de atividade remota, situação na qual cria-se o ambiente perfeito para o termo conhecido por IoT (do inglês \textit{Internet of Things}).
-
-		Entre dispositivos dependentes de interfaces de usuário e de entrada e saída de sinais existe os híbridos. São dispositivos que utilizam recursos de ambos os extremos citados.
-      Dispositivos como \textit{smartwatches} e \textit{fitness trackers} são exemplos de tais dispositivos híbridos no qual possuem restrições de equalização à prioridade dada pelo dispositivo para ambas as operações de interface e sinais.
-
-		A separação dos conceitos computação \wearable\ e IoT ainda não estão claros segundo a bibliografia.
-      Sistemas operacionais de propósito específico para ambientes \wearable\ são comumente focado em um único tipo de seguimento de produto como os \textit{smartwatches}, sendo que proporciona aos desenvolvedores um meio para sua aplicação final além de entregar um produto de alta qualidade.
-      Também, atualmente, não existe nenhum sistema que satisfaça todos os requisitos apresentados \citep{Amorim2017}.
-
-		Já \citet{Jozwiak2017} caracteriza um sistema \wearable\ como um sistema \textit{cyber}-físico\footnote{Sendo \textit{cyber-} uma combinação dos termos `computador', `rede de computadores' ou `realidade virtual' com um segundo termo, no caso o `físico' oriundo de circuitos.} móvel autônomo.
-      São sistemas que podem ter mobilidade inerente ou poder ser transportado para outro sistema, industrial ou natural (incluindo humanos), sendo autônomos em termos de funcionalidade.
-      Podem ser utilizados para aplicações de consumidores (computação móvel), extensões ou reposições de capacidades humanas, sistemas sociais (\textit{health-care} inteligente), automotivo, industrial (monitoramento) e aplicações comerciais como realidade aumentada para informações turísticas.
-		Eles representam uma grande parte da heterogeneidade de sistemas embarcados, cobrindo muitos campos e tipos de aplicações que vão desde um dispositivo inteligente integrado à roupa, focado no campo de computação \textit{mobile} pessoal, até indústrias como dispositivos de segurança. % \citep{Jozwiak2017}.
-      Esses dispositivos podem também trabalhar de forma colaborativa com \textit{smartphones}, redes e outros sistemas criando um sistema mais complexo.
-
-		Segundo \citet{VanLaerhoven2002}, a distribuição de elementos computacionais, como sensores, em objetos mundanos em nosso cotidiano se adéqua à pesquisa denominada por computação ubíqua.
-      Isso implica também que computação \wearable\ também não foge deste arcabouço, uma vez que superfícies de roupas são uma plataforma de suporte ideal para uma grande quantidade de sensores (desde que sejam miniaturizados para que eles não obstruam o usuário).
-		Essa restrição de tamanho geralmente significa que a própria qualidade do equipamento também está comprometida, o que leva ao conceito de muitos atuadores e sensores simplistas.
-
-		Sendo sistemas \wearables\ uma subclasse de sistemas embutidos, estão sujeitos à várias restrições de \design, sendo elas performance em multi-nós, gasto energético consciente e alta flexibilidade \citep{Plessl2003}:
-
-     \begin{description}
-       	\item [Performance de multi-nós:] Requer uma performance base fixa para tarefas que não mostram altas demandas computacionais nem restrições de tempo rigorosa.
-            Sistemas \wearables\ executam rajadas de tarefas de computação intensiva que consideram restrições de tempo-real.
-            Não realizando as tarefas, o sistema torna-se inaplicável.
-
-		   \item [Gasto energético consciente:] É essencial em sistema deve-se manter ativo e funcional num certo período de tempo.
-            O \design\ do gasto de energia conduz inúmeros desafios como gerenciamento computacional energético eficiente e energização dinâmica.
-
-            Diferenciando os termos de baixo custo de energia e eficiência energético, o consumo de energia é mensurado pela divisão da dissipação energética pelo tempo mensurado.
-            %
-            A eficiência energética relaciona o total de energia necessário para computar uma tarefa específica sendo o desafio a construção de um \design\ na qual possui-se alta eficiência energética para um dado conjunto de tarefas.
-            O procedimento dinâmico de energização consiste na tarefa de associar determinada tarefa para o componente mais eficiente (energeticamente falando) disponível e forçar todos os outros não utilizados pelo sistema a serem postos em modo de economia de energia ou desligá-los quando apropriadamente.
-
-   		\item [Flexibilidade:] Quando menciona-se sobre alta flexibilidade, é considerado o fato de que o dispositivo será utilizado em situações altamente dinâmicas.
+        
+        % desempenho e gasto energético
+        Como esses dispositivos representam uma parte da heterogeneidade da classe de SE, também estão sujeitos às várias restrições de \design\ relacionadas à classe maior, sendo elas desempenho e gasto energético consciente \citep{Plessl2003, Jozwiak2017}:
+        
+        \begin{description}
+            \item[Desempenho:] 
+            %desempenho
+            Sistemas \wearables\ executam de tarefas de computação intensiva que consideram restrições de tempo-real onde não realizando-as, o sistema torna-se inaplicável.
+            Assim, requere-se um desempenho que seja viável para a execução de suas tarefas;
+            
+            \item [Gasto Energético:]
+            % energia
+            Da mesma forma, é essencial em um sistema manter-se ativo e funcional num certo período de tempo.
+            Como a eficiência energética está relaciona ao total de energia necessário para computar uma tarefa, o \design\ do gasto de energético de um sistema conduz inúmeros desafios.
+            Gerenciar esse gasto também é um item a ser considerado na construção de um produto.
+            Ao alterar os padrões de desempenho de um sistema, seu padrão energético também é alterado;
+           
+            \item [Flexibilidade:] Considera-se o fato de que o dispositivo por ter sua \textit{wearability}, deverá ser utilizado em situações altamente dinâmicas.
             Isso fica claro na necessidade na qual os requisitos de aplicação variam de acordo com as escolhas do usuário, mas também com o contexto e local utilizado.
             Outro, é no fato de que o usuário troca de roupas constantemente e com isso os dispositivos devem ter a capacidade de serem acoplados e removidos, neste caso.
-            Isso além de critérios como confiabilidade, disponibilidade e fatores dependentes de sua forma como volume e peso.
-     \end{description}
-
-		Dessa forma, pode-se estabelecer que os requisitos flexíveis em um sistema \wearable\ demanda um sistema de computação programável de propósito geral, enquanto os requisitos de alta performance e consumo de energia consciente demandam um sistema computacional especializado.
-      Assim, como meio para solução desses problemas, \citeauthor{Plessl2003} utilizaram-se de um \hardware\ reconfigurável para incorporar ao sistema.
-      O trabalho exibe um sistema \wearables\ compreendendo de um processador de até médio porte em termos de processamento e módulos reconfiguráveis.
-		A utilização de \hardware\ reconfigurável nos permite alcançar alto processamento com maior eficiência energética em relação à processadores para tarefas de computação intensiva em tempo real.
+            
+            E também, deve-se lembrar de requisitos básicos de todos os embarcados, isso é, critérios como confiabilidade, disponibilidade e fatores dependentes de sua forma como volume e peso.
+        \end{description}
+        
+    
+    
+    \subsection{Aplicações}
+    
+        %intro
+        \Wearables\ eram utilizados inicialmente para fins de tecnologia militar.
+        Ao serem introduzidos ao público, estes equipamentos começaram como itens de elegância e atualmente suas aplicações são voltadas para cuidados com a saúde e áreas da medicina, mostrando como o uso desses dispositivos é possível detectar ou auxiliar o usuário na melhora de hábitos quanto para auxílios na execução de tarefas específicas em uma empresa, por exemplo \citep{chan2012smart}.
+        
+        As áreas são as mais diversas como por exemplo para consumidores (computação móvel) que são extensões ou reposições de capacidades humanas, para sistemas sociais (\textit{health-care} inteligente), automotivo, industrial (monitoramento) e aplicações comerciais como realidade aumentada para informações turísticas.
+        %
+        Também é factível que \wearables\ possam ter mobilidade inerente ou ser transportados para outros sistemas, industriais ou naturais (incluindo humanos), sendo autônomos em termos de funcionalidade \citep{Jozwiak2017}.
+    
+        %ajuda em saúde    
+        Algum dos dispositivos são fabricados para indivíduos que já são motivados pela mudança de hábito ou que são considerados para operarem em saúde e seguridade de organizações, empregados, segurança e clínicos com a motivação de melhorarem o desempenho dos respectivos usuários.
+        Muito dos comportamentos para uma boa saúde e segurança poderiam ser direcionados para uma melhora significativa na saúde da população se tais dispositivos fossem utilizados com frequência e sem interrupções nas atividades \citep{patel2015wearable}.
+        
+        
+        % podem trabalhar com smartphone
+        Não só podem trabalhar de forma autônoma mas também podem serem um artefato de um sistema inteligente maior como computadores, \textit{smartphones} ou até mesmo computação na nuvem, criando cada vez mais um sistema mais inteligente, complexo e interativo com o usuário ou com a demanda da empresa \citep{Jozwiak2017}.
+        Uma plataforma sensorial composta de uma luva inteligente para medições multiparamétricas do sistema nervoso, possibilitando o estudo de status cognitivo e físico é exibida na Figura~\ref{fig:health}.
+        
+        \begin{figure}[h] \centering
+            %\vspace{5pt}
+            \includegraphics[width=0.8\textwidth]{img/rb-health.png}
+            %\vspace{15pt}
+            \caption{Ambulatório \Wearable.\ Uma instrumentação ambulatorial composta de roupas, luvas e dispositivo de pulso. Fonte: \citet{lmberis2007advanced}.}
+            \label{fig:health}
+        \end{figure}
+    
+        % ajuda em atividades
+        Ao utilizar um dispositivo \wearable\ é possível também auxiliar e principalmente melhorar o desempenho de usuários nas mais diversas aplicações como por exemplo manutenção de aeronaves, assistência de navegação e inspeção veicular \citep{billinghurst1999wearable}.
+        Um exemplo de interação que possível com o uso de \textit{smartphones} é exibido na Figura~\ref{fig:rb-routine} onde investigou-se o efeito de
+        frequência de amostragem de auto-relatos de duas atividades de rotina, sendo elas sentar e andar.
+        
+        \begin{figure}[h] \centering
+            \includegraphics[width=0.7\textwidth]{img/rb-routine.png}
+            \caption{Plataforma sensorial \wearable\ com a utilização de um telefone celular para interação. Fonte: \citet{Klasnja:2008:UWS:1409635.1409656}.}
+            \label{fig:rb-routine}
+        \end{figure}
+        
+        
+        % industrial
+        O estudo da computação \wearable\ no meio industrial foi motivado pela observação de que os sistemas móveis comuns não eram usáveis nas situações onde os usuários precisavam de foco em suas tarefas.
+        Assim, a maioria das definições gerais de um sistema computacional industrial \wearable\ são definições funcionais de um sistema que pode ser usado em certo tempo, em qualquer lugar, e que não o distrai de suas interações com o mundo real para a realização de suas tarefas específicas \citep{lawo2007industrial}.
+        Um exemplo é exibido na Figura~\ref{fig:industry}.
+        
+        \begin{figure}[h] \centering
+            \includegraphics[width=0.97\textwidth]{img/rb-industry.png}
+            \caption{\Wearable\ que permite a visualização e manuseio de projetos virtuais por meio de realidade aumentada. Fonte: \citet{dunston2005mixed}.}
+            \label{fig:industry}
+        \end{figure}
+        
+        % problemas
+        \citet{patel2015wearable} aponta também quatro pontos que ainda representam problemas para o desenvolvimento e uso dos dispositivos \wearable\ e sua estabilização no cotidiano dos usuários.
+        O primeiro é que uma pessoa deve ser motivada suficientemente para querer o dispositivo e estar disposta a utilizá-lo.
+        Segundo, uma vez adquirido um dispositivo \wearable\ o usuário deve lembrar constantemente de utilizá-lo e ocasionalmente recarregá-lo.
+        Terceiro empecilho é que a maioria dos dispositivos devem ser aptos a registrar de forma acurada os dados de seu ambiente utilizado sensores e aturadores.
+        E por último, assumindo que a informação for lida com acurácia, os dados devem também serem apresentados ao usuários de forma compreensível para o seu entendimento das atividades realizadas e também motivando o uso contínuo do dispositivo.
+        Dessa forma, mesmo que eles tenham grande potencial para facilitar a vida de usuários, a mudança não ocorre somente pelos dispositivos, necessitando uma grande demanda do hábito do usuário para seu uso.
+        
+        %cada vez mais usados
+        Mas estudos como o de \citet{cornelius2014wearable} mostram que utilização de dispositivos eletrônicos inteligentes nas as redes de área corporal (do inglês \textit{body area network}) são cada vez mais usadas para monitoramento da saúde, assistência pessoal, entretenimento e automação residencial \citep{cornelius2014wearable}.
+        
+        
+        % exemplo do crescimento 
+        Um exemplo de seu potencial crescimento é no interesse cada vez mais de usuários tanto para uso quanto para desenvolvimento destes.
+        \citet{merkouris2015introducing} em seu trabalho, avaliou experimentalmente a comparação dos benefícios da computação robótica e \wearable\ como plataforma meio no ensino de programação de dispositivos para crianças.
+        Avaliaram atitudes e emoções dos estudantes antes e depois dos uso das plataformas de desenvolvimento e concluíram que utilizar computação obliqua como meio para aprendizagem de programação computadores é mais efetivo que o ensino de desenvolvimento para plataformas \textit{desktop} utilizadas geralmente.
+        Citam também que mesmo que desenvolvimento para dispositivos \wearable\ não tenha sido tão motivador comparado com plataforma robótica, ainda sim apresentou-se mais interesse nas crianças que plataformas \textit{desktop}.
+        
+        
+        % wearable e FPGA
+        Além desses dispositivos, existe também desenvolvimentos de produtos \wearables\ que envolvem módulos em \hardware\ reconfiguráveis.
+        Essa união permite que o \wearable\ utilize recursos de \hardware\ reconfigurável para suas tarefas além de poder se construído em totalmente nessa arquitetura sistêmica.
+        O fruto deste produto entre essas tecnologias nos permite o alcançar maior poder de processamento com eficiência energética que processadores e microcontroladores tradicionais, desde que a aplicação corresponda bem às estruturas espaciais dos FPGAs \citep{Plessl2003}.
+        \citet{demarco2011real} cita que enquanto adicionar a tecnologia de um FPGA em um projeto \wearable\ pode ter parecido complicado no \design,\ o FPGA fez com que fosse possível expandir facilmente as capacidades do sistema \wearable\ em momentos futuros.
+        Um exemplo de conceito de uso é exibido na Figura~\ref{fig:rb-fpga} onde é descrito de forma esquemática um sistema para o monitoramento fetal domiciliar. 
+        
+        \begin{figure}[h] \centering
+            \includegraphics[width=0.97\textwidth]{img/rb-fpga.png}
+            \caption{Monitoramento fetal domiciliar utilizando um FPGA e comunicação sem-fio. Fonte: \citet{fanelli2010prototype}.}
+            \label{fig:rb-fpga}
+        \end{figure}
+        
+        Caracteriza-se por uma unidade \wearable\ e uma estação de \textit{dock}. 
+        Este é composto por um gravador colocado no na região do umbigo. 
+        Um primeiro estágio opera um pré-processamento analógico com um FPGA extraindo a série, selecionando o canal com o melhor conteúdo de informação e os envia para o \textit{dock} através de uma conexão Bluetooth. 
+        O \textit{dock} armazena as gravações em uma memória e as envia para o hospital através da linha telefônica.
+        
+        
+        

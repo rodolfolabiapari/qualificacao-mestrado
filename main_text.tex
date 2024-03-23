@@ -1,3 +1,4 @@
+% !TeX spellcheck = pt_BR
 % !TeX encoding = UTF-8
 \documentclass[bind,a4paper,table]{mythesis}
 
@@ -64,55 +65,15 @@
 \newcommand{\xmark}{\ding{55}}%
 
 
+\input{tex/preamble}
 %\input{tex/defs.tex}
 \makeindex
 
 \newcommand{\listofalgorithmes}{\tocfile{\listalgorithmcfname}{loa}}
 
-\newcommand{\hardware }{\textit{hardware}}
-\newcommand{\Hardware }{\textit{Hardware}}
-\newcommand{\software }{\textit{software}}
-\newcommand{\Software }{\textit{Software}}
-\newcommand{\hardwares}{\textit{hardwares}}
-\newcommand{\Hardwares}{\textit{Hardwares}}
-\newcommand{\softwares}{\textit{softwares}}
-\newcommand{\Softwares}{\textit{Softwares}}
+%\newcommand{\titulo}{Uma Abordagem de Particionamento Hardware\ e Software\ para Design\ de Wearable\ em Hardware\ Reconfigurável}
+\newcommand{\titulo}{Uma Abordagem de Particionamento \Hardware\ e \Software\ para \Design\ de \Wearables\ em \Hardware\ Reconfigurável}
 
-\newcommand{\hs}{\textit{hardware}\ e\ \textit{software}}
-\newcommand{\HS}{\textit{Hardware}\ e\ \textit{Software}}
-
-\newcommand{\wearable} {\textit{wearable}}
-\newcommand{\Wearable} {\textit{Wearable}}
-\newcommand{\wearables}{\textit{wearables}}
-\newcommand{\Wearables}{\textit{Wearables}}
-
-
-\newcommand{\design}   {\textit{design}}
-\newcommand{\designer} {\textit{designer}}
-\newcommand{\Design}   {\textit{Design}}
-\newcommand{\Designer} {\textit{Designer}}
-\newcommand{\designs}  {\textit{designs}}
-\newcommand{\designers}{\textit{designsers}}
-\newcommand{\Designs}  {\textit{Designs}}
-\newcommand{\Designers}{\textit{Designers}}
-\newcommand{\assembly} {\textit{assembly}}
-\newcommand{\profile}  {\textit{profile}}
-\newcommand{\Profile}  {\textit{Profile}}
-\newcommand{\speedup}  {\textit{speedup}}
-\newcommand{\Speedup}  {\textit{Speedup}}
-\newcommand{\core}     {\textit{core}}
-\newcommand{\cores}    {\textit{cores}}
-\newcommand{\codesign} {\textit{codesign}}
-\newcommand{\mobile}   {\textit{mobile}}
-\newcommand{\benchmark}   {\textit{benchmark}}
-\newcommand{\benchmarks}   {\textit{benchmarks}}
-\newcommand{\Benchmark}   {\textit{Benchmark}}
-\newcommand{\Benchmarks}   {\textit{Benchmarks}}
-\newcommand{\titulo}{Uma Abordagem do Problema de Particionamento \Hardware\ e \Software\ para \Design\ de Sistemas Computacionais \Wearables}
-
-\newcommand{\A}{$\mathcal{A}$}
-\newcommand{\B}{$\mathcal{B}$}
-\newcommand{\C}{$\mathcal{C}$}
 
 \newenvironment{VarDescription}[1]%
   {\begin{list}{}{\renewcommand{\makelabel}[1]{\hspace{0cm}\hfil\textbf{##1}  :}%
@@ -131,7 +92,8 @@
 \@ifpackageloaded{hyperref}{%
   \hypersetup{%
   colorlinks=false,
-  pdftitle = {Uma Abordagem do Problema do Particionamento \Hardware\ e \Software\ para \Design\ de Sistemas Computacionais \Wearables},
+  pdfborder={0 0 0},
+  pdftitle = {Uma Abordagem de Particionamento Hardware\ e Software\ para Design\ de Wearables\ em Hardware\ Reconfigurável},
   pdfsubject = {Rodolfo Labiapari Mansur Guimarães's MsC thesis},
   pdfkeywords = {Wearable, FPGA, Hardware Software Partitioning},
   pdfauthor = {\textcopyright\ Rodolfo Labiapari Mansur Guimarães}}
@@ -159,7 +121,8 @@
 %% Define the thesis title and author
 \begin{document}
 \let\cleardoublepage\clearpage
-\title{\titulo}
+\title{Uma Abordagem de Particionamento \Hardware\ e \Software\ para \Design\ de \Wearables\ em \Hardware\ Reconfigurável}
+%\title{Uma Abordagem de Particionamento Hardware\ e Software\ para Design\ de Wearable\ em Hardware\ Reconfigurável}
 \author{Rodolfo Labiapari Mansur Guimarães}%% Start the document
 
 %% Define the un-numbered front matter (cover pages, rubrik and table of contents)
@@ -173,13 +136,10 @@
   \selectlanguage{brazilian}
   	\input{tex/extra-nomenclature}
 	\let\cleardoublepage\clearpage
-	\input{tex/chap-Introducao.tex}
-	\input{tex/chap-Revisao_Bibliografica.tex}
-	\input{tex/chap-Trabalhos_Relacionados.tex}
-	\input{tex/chap-Metodologia1.tex}
-    \input{tex/chap-Metodologia2.tex}
-	%%\input{tex/chap-Resultados.tex}
-	\input{tex/chap-Conclusao.tex}
+	\input{tex/chap-Revisao_Bibliografica.tex} %done
+	\input{tex/chap-Trabalhos_Relacionados.tex} %done
+	\input{tex/chap-Metodologia1.tex} %done
+    \input{tex/Experimentos.tex}
 \end{mainmatter}
 
 %% Produce the appendices
@@ -188,7 +148,7 @@
 
 \end{flushleft}
 	\selectlanguage{brazilian}
-  	%\input{tex/extra-appendices}
+  	\input{tex/extra-appendices}
 \end{appendices}
 \let\cleardoublepage\clearpage
 %% Produce the un-numbered back matter (e.g. colophon,

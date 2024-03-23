@@ -1,0 +1,125 @@
+%!TEX root = ../main.tex
+% !TeX encoding = UTF-8
+
+       \begin{algorithm}[t] \footnotesize
+           \KwIn{vetor buffer.}
+           \KwOut{média, variância, desvio padrão.}
+           
+           \BlankLine
+           \Begin{
+               $\vars{soma}= \vars{variancia} = 0$;
+               \BlankLine
+               
+               \lFor{$\func{length}(\vars{buffer})$}{$\vars{soma} \mathrel{+}= \vars{buffer}_i$}
+               \BlankLine
+               
+               $\vars{media} = \vars{soma} \div \func{length}(\vars{buffer})$\;
+               \BlankLine
+               
+               
+               \lFor{$\func{length}(\vars{buffer})$}{
+                   $\vars{variancia} \mathrel{+}= (\vars{buffer}_i - \vars{media})^2$
+               }
+               
+               \BlankLine
+               $\vars{variancia} \mathrel{\div}= \func{length}(\vars{buffer})$\;
+               \BlankLine
+               $\vars{dp} = \func{sqrt}(\vars{variancia})$\;
+               
+               \Return \vars{media}, \vars{variancia}, \vars{dp}\;
+           }
+           \caption{Método Estatístico.}
+           \label{alg:statistic}
+       \end{algorithm}
+       
+       \begin{algorithm}[t] \footnotesize
+           \KwIn{vetor buffer, ponto.}
+           \KwOut{distância interpolada.}
+           
+           \BlankLine
+           \Begin{
+               
+               $\vars{nova\_distancia} = 0$\;
+               \BlankLine
+               
+               \For{$\vars{i}\ in\ 1:\func{length}(\vars{buffer})$}{
+                   $\vars{c} = \vars{d} = 1$;
+                   
+                   \BlankLine
+                   \For{$\vars{j}\ in\ 1:\func{length}(\vars{buffer})$}{
+                       \If{$\vars{i} \ne \vars{j}$}{
+                           $\vars{c} \mathrel{\times}= \vars{ponto} - \vars{j}$;
+                           %\BlankLine
+                           $\vars{d} \mathrel{\times}= \vars{i} - \vars{j}$;
+                       }
+                   }
+                   \BlankLine
+                   $\vars{nova\_distancia} \mathrel{+}= \vars{buffer}_i \times \vars{c} \div \vars{d}$;
+               }
+               \BlankLine
+               
+               \lIf{$\vars{nova\_distancia} \ge 0$}{$\Return\ \vars{nova\_distancia}$}
+               \lElse{$\Return\ 0$}
+               
+           }
+           \caption{Método Interpolação por Lagrange.}
+           \label{alg:lagrange}
+       \end{algorithm}
+       
+       \begin{algorithm}[t] \footnotesize
+           \KwIn{distância$_1$, distância$_2 = 0$, distância$_3 = 0$.}
+           \KwOut{primaridade.}
+           
+           \BlankLine
+           \Begin{
+               
+               $\vars{primo} = \vars{distancia}_1 + \vars{distancia}_2 + \vars{distancia}_3$;
+               \BlankLine
+               
+               \lIf{$\vars{primo} \le 1$}{\Return 0}
+               \BlankLine
+               \lIf{$\vars{primo} = 2$}{\Return 1}
+               \BlankLine
+               
+               \lIf{\vars{primo} $\func{mod}(2) = 0$}{$\vars{primo} \mathrel{+}= 1$}
+               \BlankLine
+               
+               $\vars{divisor} = \vars{primo} \div 2$;
+               
+               \lIf{\vars{divisor} $\func{mod}(2) = 0$}{$\vars{divisor} \mathrel{+}= 1$}
+               \BlankLine
+               
+               
+               \While{\vars{divisor} $> 2$}{
+                   \lIf{\vars{primo} $\func{mod}(divisor) = 0$}{\Return 0}
+                   \BlankLine
+                   \lElse{\vars{divisor} $\mathrel{-}= 2$;}
+                   
+               }
+               \Return 1;
+               
+           }
+           \caption{Método Número Primo.}
+           \label{alg:prime}
+       \end{algorithm}
+       
+       \begin{algorithm}[t]
+           \footnotesize
+           \KwIn{distância lida; distância mínima.}
+           \KwOut{boolean.}
+           
+           \BlankLine
+           \Begin{
+               \tcp{Se há risco, retorna TRUE}
+               \uIf{\vars{distancia\_lida} $\le$ \vars{distancia\_minima}}{
+                   \Return 1
+               }
+               \lElse {
+                   \Return 0
+               }
+               
+           }
+           \caption{Método avaliação de Risco.}
+           \label{alg:risk}
+       \end{algorithm}
+       
