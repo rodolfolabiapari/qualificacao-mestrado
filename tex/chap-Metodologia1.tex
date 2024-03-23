@@ -1,0 +1,606 @@
+%!TEX root = ../main_text.tex
+\chapter{\Design\ de Sistemas \Wearable} \label{chap:design}
+
+   A seguir, serão descritos alguns tópicos seguindo conceitos estabelecidos pelo livro de \citet{Sass2010} e utilizado por vários trabalhos como \citet{Arato2003, Arato2005, Mann2007, Hassine2017}.
+   %Esses tópicos são necessários para o entendimento básico dos arcabouços metodológicos de \codesign\ e o seu particionamento para sistemas embarcados, em especial para sistemas \wearable, além de definições matemáticas sobre.
+
+   Os tópicos a seguir são a Definição de \Design\ de Referência de \Software\ (Seção~\ref{sec:GCF}) bem como o Ganho de Performance (Seção~\ref{sec:ganho_performance}) em tais sistemas, o Particionamento \HS\ para Sistemas \Wearables\  (Seção~\ref{sec:desenvolvimento}) e a Proposta de Procedimento Analítico (Seção~\ref{sec:proposta}).
+
+   \section{Introdução ao \Design\ Referencial de \Software\ Utilizando Grafo de Controle de Fluxo} \label{sec:GCF}
+
+      \begin{wrapfigure}{O}{0.4\textwidth}
+      	\centering
+      	\includegraphics[width=0.35\textwidth]{img/f3-5.png}
+      	%\vspace{10pt}
+      	\caption{Identificação de blocos básicos em um código \assembly.}
+      	\label{fig:blocos_basicos}
+      	%\vspace{-15pt}
+      \end{wrapfigure}
+
+      É possível descrever sistemas livre de especificações formais de \software\ ou \hardware\ por meio de descrições de protótipos simples.
+      Estes, conhecidos como \design\ referencial de \software.
+      Como será visualizado a seguir, sua vantagem mais notável é a generalização de uma especificação completa, eliminando quaisquer tipo de incertezas sobre o comportamento do sistema ao realizar uma análise sobre, sendo este podendo ser representado por diversas formas.
+      % além de outras como o fato de que sua especificação pode ser analisada por ferramentas computacionais, e gerando modelos aut.
+
+      %Assumindo que o \design\ de referência de \textit{software} já exista,
+      %Primeiramente, será demonstrado matematicamente como computação está em \design\ referencial de \sof%htware\ para que depois, isso possa nos auxiliar na decisão do que deverá ser implementado em nível de \hs.
+      Como o algoritmo a ser analisado e particionado também pode ser representado em forma de grafo de tarefas/rotinas, pode-se então associar o \design\ da sub-rotina também com o uso da teoria de grafos \citep{Mann2007}, em especial o Gráfico de Controle de Fluxo (GCF).
+      Ele é definido por
+      \begin{equation}
+         C = (B, F) \label{eq:subrotina}
+      \end{equation}
+
+       onde $B$ são vértices que representam os blocos básicos\footnote{De modo geral é um trecho de código sequencial maximal, onde só existe um ponto de entrada e um ponto de saída.}
+      %http://www.dcc.ufrj.br/~gabriel/microarq/Escalonamento.pdf
+      e $ F $ são arestas que indicam a todas as possibilidades de caminhos entre os blocos.
+
+      Utilizando o exemplo da Figura \ref{fig:blocos_basicos}, o primeiro grupo \A\ é um bloco não básico porque não é maximal, ou seja, a primeira instrução \texttt{store word with update} deveria estar incluída ao grupo para conter o número máximo de instruções possuindo apenas um ponto de entrada e saída.
+      Grupo \B\ é um bloco básico e o grupo \C\ não se define como bloco básico pois existe duas entradas para o bloco, sendo elas na instrução \texttt{store word} e também pelo \texttt{branching} direcionado para \texttt{L2}.
+
+      Dessa forma, fazendo uma relação entre o processo de gerar um grafo de controle de fluxo a partir de um código em alto nível, a Figura~\ref{fig:f3-6} exibe um pequeno código demonstrativo na qual o processo ocorrerá.
+      A partir do código em alto nível (Figura~\ref{fig:f3-6} \textit{a)}) é identificado os blocos básicos de acordo com o compilador\footnote{Deve-se atentar que, só é possível identificar blocos básicos em um arquivo em linguagem de programação \textit{C} desde que se saiba qual compilador foi utilizado para emitir o código \assembly.} utilizado.
+      Neste exemplo, utilizou-se de um compilador para \texttt{PowerPC}\footnote{Arquitetura que utiliza RISC como arquitetura do conjunto de instruções.} onde os blocos básicos são identificados pela Figura~\ref{fig:f3-6} \textit{b)}.
+      Por fim o grafo de controle de fluxo resultante deste processo, representado pela Figura~\ref{fig:f3-6} \textit{c)}.
+
+      \begin{figure}[h] \centering
+         \includegraphics[width=0.95\textwidth]{img/f3-6.png}
+         \caption{Identificação de blocos básicos e a representação por meio de um grafo não atrelado à uma especificação \hs.}
+         \label{fig:f3-6}
+      \end{figure}
+
+      A decomposição de um \design\ referencial de \software\ pode gerar dois componentes: uma porção a ser realizada em \hardware\ e; outra executada em \software.
+      Essa decisão de divisão é chamada de Problema de Particionamento.
+      Segundo \citeauthor{Sass2010}, para sistemas em FPGA, o particionamento é um sub-problema de um problema mais geral no âmbito de \codesign, onde refere-se ao \design\ cooperativo entre engenheiros de \hs\ para um desenvolvimento mais eficiente.% envolvendo \textit{stakeholders}, por exemplo.
+      %Para continuar, deve-se definir alguns conceitos básicos, descritos na Seção \ref{sec:gc}.
+
+      \subsection{Grafo de Chamada} \label{sec:gc}
+         Modelado uma sub-rotina de um \design\ referencial de \software\ utilizando o grafo de controle de fluxo, definido na Seção \ref{sec:GCF}, agora será descrito uma nova notação, chamada de Grafo de Chamada (GC) utilizado para o entendimento da partição.
+         Consiste num conjunto de GCFs, um por sub-rotinas, ou seja,
+         %
+         \begin{equation}
+            \mathcal{C} = {C_0, C_1, \dots C_{n-1}}
+         \end{equation}
+         %
+         %onde $ C_i = (V_i, E_i) $
+         onde $ C_i = (B_i, F_i) $ representa o grafo de controle de fluxo de uma sub-rotina $ i $, como mostrado na Equação~\ref{eq:subrotina}.
+         Sendo assim, o grafo estático de chamada da aplicação é escrito por
+         %
+         \begin{equation}
+            \mathcal{A} = (\mathcal{C}, \mathcal{L}) \label{eq:a}
+         \end{equation}
+         %
+         onde \A\ representa uma aplicação específica e $ \mathcal{L} \subseteq \mathcal{C} \times \mathcal{C} $ é um subconjunto do plano cartesiano dos GCF.
+         Duas sub-rotinas são relacionadas se podem ser determinadas que, no tempo de compilação, a sub-rotina $ i $ tem potencial de invocar a sub-rotina $ j $, ou seja, $ (C_i, C_j) \in \mathcal{L} $.
+
+         É assumido que os blocos básicos de cada sub-rotina são disjuntos, ou seja, cada bloco básico em uma aplicação pertence a exatamente um GCF.
+         Além do mais, é assumido também que um nó raiz para o GC é implícito, ou seja, uma sub-rotina é designada a iniciar a execução.
+         Nem todos os executáveis podem ser expressados nesse modelo.
+         Por exemplo, o manuseio de sinais e interrupções não são representadas e assim, não é possível determinar todos vértices $ F_i $ em uma dada sub-rotina $ C_i $ de um GCF antes da execução.
+         %Uma outra forma é com o paradigma de orientação à objeto.
+         %Ele depende do tempo de execução para conectar os métodos virtuais invocados e dessa forma, por \design, esse paradigma nos previne de saber todos os vértices antes da execução.
+         %Para agora, será considerado que o modelo é suficiente para ser expressado em \design\ referencial de \software.
+
+         Um equívoco comum é de que uma definição formal de particionamento só aplica à separação de aplicação componentes de \hs, ou seja, a partição contém exatamente dois conjuntos.
+         Todavia, para fazer o problema mais tratável, é comum agrupar primeiramente operandos em recursos, ou seja, uma partição com um grande número de subconjuntos, e então mapeia esses recursos tanto em \hardware\ quanto \software.
+         Assumindo que esses recursos atuam razoavelmente bem \textit{clustered}, então a decomposição de uma aplicação em componentes de \hs\ pode ser dirigida por comparações de ganho de performance desse recurso contra outro situado no outro conjunto.
+
+         Definidos os conceitos prévios, será definido agora, formalmente, o conceito de uma partição.
+
+         Uma partição $ \mathcal{S} = \{S_0, S_1, \dots\} $ de um conjunto universal $ U $ é um conjunto de subconjuntos de $ U $ sendo que
+         %
+         \begin{equation}
+            \bigcup_{S \in \mathcal{S}} S = U \label{eq:part_form_1}
+         \end{equation}
+         \begin{equation}
+            \forall S, S' \in \mathcal{S} | S \cap S' = \emptyset \label{eq:part_form_2}
+         \end{equation}
+         e assim
+         \begin{equation}
+            \forall S \in \mathcal{S} \cdot S \neq \emptyset \label{eq:part_form_3}
+         \end{equation}
+         %
+         Descrevendo textualmente:
+         \begin{description}
+            \item [Equação \ref{eq:part_form_1}:] cada elemento de $ U $ é um membro de, pelo menos, um subconjunto $ S \in \mathcal{S} $;        
+
+            \item [Equações \ref{eq:part_form_2} e \ref{eq:part_form_3}:] os subconjuntos $ S \in \mathcal{S} $ são emparelhados disjuntos e não vazio.
+            Em outras palavras, cada elemento do nosso universo $ U $ termina exatamente em um dos subconjuntos de $\mathcal{S}$ e nenhum dos subconjuntos são vazios.
+
+         \end{description}
+
+         %exemplo
+         Por exemplo, considerando um sistema hipotético \wearable\ na qual possui o universo $ U = \{a, e, i, o, u, y\} $ de recursos de processamento.
+         Dessa forma, uma partição desse problema $ \mathcal{X}_a $ de $ U $ pode ser representado por
+         %
+         \begin{equation}
+         \mathcal{X}_a = \left\{\{a, e, i, o, u\}, \{y\}\right\} \label{eq:xa}
+         \end{equation}
+         %
+         e supondo que o conjunto possa ser representando por cada unidade, uma outra forma de representação pode ser
+         %
+         \begin{eqnarray}
+         \mathcal{X}_b &=& \left\{\{a\}, \{e\}, \{i\}, \{o\}, \{u\}, \{y\}\right\} \label{eq:part_a} \\
+         \mathcal{X}_c &=& \left\{\{a\}, \{e\}, \{i\}, \{o\} \right\} \label{eq:part_c} \\
+         \mathcal{X}_d &=& \left\{\{a, e, i\}, \{i, o, u, y\}, \{\}\right\} \label{eq:part_d}
+         \end{eqnarray}
+         %
+         Sobre tais conceitos, a Partição \ref{eq:part_c} viola a Equação \ref{eq:part_form_1} e a Partição \ref{eq:part_d} viola as Equações \ref{eq:part_form_2} e \ref{eq:part_form_3}, pois a primeira omite um item $y$ e a segunda possui um conjunto vazio além de redundância.
+         %
+         Assim, ao utilizar o particionamento para este exemplo, a Figura \ref{fig:parti_alfabeto} ilustra o $ \mathcal{X}_a $ (Equação \ref{eq:part_a}) graficamente, segundo a Partição \ref{eq:xa} como seria uma divisão entre \hs\ dos recursos listados.
+
+         \begin{figure}[h] \centering
+            \includegraphics[width=0.5\textwidth]{img/f4-2.png}
+            \caption{Figura representativa do mapeamento da aplicação.}
+            \label{fig:parti_alfabeto}
+         \end{figure}
+%\end{commaent}
+
+         Aprendido os conceitos, é possível aplicar o formalismo à $ \mathcal{A} $.
+         Se assumirmos que nosso universo é o conjunto de todos os blocos básicos $B$ de todas as sub-rotinas de um dispositivo \wearable, então $U$ é as partições de sub-rotinas
+         %
+         \begin{equation}
+            U = \bigcup_{C \in \mathcal{C}} B(C) \label{eq:bigcup}
+         \end{equation}
+         %
+         e chamaremos de partição natural da aplicação, onde
+         %
+         \begin{equation}
+            \mathcal{S}  = \left \{
+            \underbrace{\left \{ b_0, b_1, \dots, b_i \right \}}_{\text{sub-rotina }C_0},
+            \underbrace{\left \{ b_i, b_{i+1}, \dots, \right \}}_{\text{sub-rotina }C_1},\dots
+            \underbrace{\left \{ b_j, b_{j+1}, \dots, \right \}}_{\text{sub-rotina }C_{n-1}}
+            \right \}
+         \end{equation}
+         %
+         O propósito é reorganizar a partição de blocos básicos e então mapear cada subconjunto de ambos os \hs.
+         Dessa forma, estamos livres para criar e remover subconjuntos não vazios, e mover blocos básicos ao redor até termos uma nova partição e assim termos um novo resultado $ \mathcal{A}’ = (\mathcal{C}’, \mathcal{L}’) $, inferido a partir da reorganização da partição $ \mathcal{X}’ $.
+         O segundo passo é mapear cada subconjunto de $ \mathcal{X} $ para ambos \hs\ como é exibido abaixo
+         %
+         \begin{equation}
+            \mathcal{X}'   = \left \{
+            \underbrace{
+               \underbrace{
+                  \left \{ b_j, b_{j+1}, \dots, \right \}
+               }_{\text{sub-rotina }C_k}
+               \underbrace{
+                  \left \{ b_k, b_{k+1}, \dots, \right \}
+               }_{\text{sub-rotina }C_l}
+               \dots
+            }_{\text{\software}}
+            \
+            \underbrace{
+               \underbrace{
+                  \left \{ b_0, b_1, \dots, b_i \right \}
+               }_{\text{sub-rotina }C_r}
+               \underbrace{
+                  \left \{ b_i, b_{i+1}, \dots, \right \}
+               }_{\text{sub-rotina }C_s}
+               \dots
+            }_{\text{\hardware}}
+            \right \} \label{eq:part_final}
+         \end{equation}
+
+
+   \section{Ganho de Performance} \label{sec:ganho_performance}
+      Para explicar como performance pode ser utilizada para guiar o particionamento, será descrita uma métrica simples chamada taxa de execução\footnote{Taxa de execução é a velocidade na qual um sistema computacional completa uma aplicação, e em um sistema de plataforma FPGA olhamos também para o \hardware\ para melhorar sua taxa de execução.}.
+      É parcialmente motivada pelo fato de que: \textit{a)} o ganho de performance é relativamente fácil de ser mensurado e \textit{b)} por causa de que, de todas as métricas comumente utilizadas, \speedup\ é frequentemente a mais importante.
+      Diferente do mundo \software\ onde se tem análise de ordem de complexidade, em \hardware\ não possui-se um guia geral para comparação.
+      O ganho de performance para aplicações em geral pode estar na acumulação de pequenos ganhos que deveriam ser perdido numa aplicação direta na teoria de complexidade.
+
+      % tempo software
+      Assim, para o \software, será usado a informação de \profile\ (Seção \ref{sec:profile}) para coletar o tempo total de execução, bem com uma fração do tempo gasto em cada sub-rotina.
+      O produto disso é a aproximação entre o tempo necessário para executar uma porção de aplicação em \software\ e usar isso como o tempo que se espera que tomará em futuras execuções.
+      É considerado uma aproximação pois é dependente dos conjuntos de dados de entrada para muitas aplicações além da existência de erros que podem impactar a performance.
+      Será utilizado $ s(i) $ para representar o tempo de execução esperado para uma invocação de uma sub-rotina $ i $, ou seja, bloco básico.
+
+      % tempo hardware
+      Precisa-se também aproximar o tempo que uma implementação equivalente em \hardware\ que iria tomar.
+      No caso dos blocos básicos implementados, isso é frequentemente mais preciso.
+      Como não possui-se um controle de fluxo, uma ferramenta auxiliar à síntese poderá dar uma aproximação de acurácia de propagação de tempo.
+      Ou, se o recurso é \textit{pipelined}, o número de estágios é mais precisamente conhecido.
+      Caso o recurso inclua controle de fluxo mas não contenha nenhum \textit{loop}, pode-se considerar o caminho mais longo como uma estimativa conservativa.
+
+      Recursos com um número variável de iterações através de um \textit{loop} apresentam o maior obstáculo para encontrar um tempo de \hardware\ aproximado.
+      Nesse caso, implementação e \textit{profiling} com recurso em \hardware\ pode ser a única solução.
+      Independente, assume-se que uma aproximação apropriada $ h(i) $ para o existente tempo de execução em \hardware.
+
+      % tempo mudanca de estado, configuracao, latencia
+      Por fim, a `interfaceação' entre \hs\ requer tempo e este custo também precisa ser contabilizado.
+      Pode-se aproximar deste custo pela aproximação do montante total do estado que necessita ser transferido ou o custo de configuração e latência.
+      Em ambos os caso, são representados por $ m(i) $ para recursos $ i \in \mathcal{H} $, sendo $\mathcal{H}$ o conjunto de recursos do \hardware.
+
+      % y é speedup
+      O ganho, ao comparar uma solução \hs\ contra uma solução puramente \software, é tipicamente mensurado como \speedup.
+      Utilizamos $ \gamma $ para sua representação e isso nos permitirá comparar recursos diferentes contra outros para determinar melhores particionamentos.
+      Dessa forma, qualquer subconjunto de blocos básicos que não produzem um ganho de performance, podem ser excluídos de consideração.
+      Em outras palavras, somente subconjuntos de blocos básicos para qual $ \gamma > 1.0 $ são considerados recursos candidatos.
+
+      Então quando considerado se um conjunto particular de blocos básicos deveriam ser mapeados ao \hardware\ ou \software, estamos interessados em seu ganho em \speedup, ou seja
+      %
+      \begin{equation}
+         \gamma =
+         \frac{
+            \text{\textit{hardware speed}}
+         }{
+            \text{\textit{software speed}}
+         }
+         =
+         \frac{
+            \frac{
+               1
+            } {
+               \text{\textit{hardware time}}
+            }
+         } {
+            \frac{
+               1
+            }{
+               \text{\textit{software time}}
+            }
+         }
+         =
+         \frac{
+            \text{\textit{software time}}
+         } {
+            \text{\textit{hardware time}}
+         }
+      \end{equation}
+      %
+      Mais especificamente, interessa-se no ganho de performance individual de cada recurso e assim, definindo $ \gamma(i), i \in \mathcal{C} $
+      %
+      \begin{equation}
+         \gamma(i) = \frac{s(i)}{h(i) + m(i)}
+      \end{equation}
+      %
+      onde $ h(i) $ e $ s(i) $ são o tempo de execução de uma implementação de um recurso $ i $ em \hs\ e a função $ m(i) $ é o tempo que se leva para sincronização, ou seja, o tempo que leva para guiar um dado entre o processador e o item reconfigurável.
+
+      %Assumindo por um momento que usaremos esse recurso separado em nosso \design, deve-se questionar sobre o quão rápido é a aplicação.
+      A velocidade da aplicação é dependente dos ganhos de performance do recurso e o quão frequentemente ele é utilizado no \design\ referencial de \software.
+      Pode-se ter essa fração do tempo gerado de um recurso particular $ p(i) $ a partir de informações de \textit{profile} e dessa forma o \speedup\ da aplicação no geral será
+      %
+      \begin{equation}
+         \Gamma = \left [
+         (1 - p(i))
+         +
+         \frac{
+            p(i)
+         }{
+            \gamma(i)
+         } \right ]^{-1}
+      \end{equation}
+      %
+      A inversão representa que estamos movendo entre taxa de execução e tempo de execução para manter o sentido de ganho de performance.
+
+      A partir dessa equação, podemos observar que aumentando a velocidade do \hardware\ de um único recurso tem-se menos e menos impacto na performance da aplicação a medida que sua frequência decresce.
+
+      Assim, para aumentar a performance sistêmica de uma aplicação no geral, também deve-se aumentar o sistema com múltiplos recursos que aumentará a performance de componentes individualmente assim como aumentando a fração agregada de tempo gasto em \hardware.
+      Para computar o \speedup\ de múltiplos recursos em \hardware, ou seja, avaliar o ganho sistêmico de um conjunto de recursos $ \mathbb{D} $ onde cada membro do conjunto contribui à performance do sistema baseado na fração do tempo gasto em cada característica.
+      Para estimar a performance desta partição, podemos adicionar recursos e rearranjar os termos para ter um ganho de performance almejado no geral, assim para o cálculo de performance dos recursos, utiliza-se da Equação \ref{eq:d_final}.
+      %
+      \begin{equation}
+         \Gamma (\mathbb{D}) =
+         \left [
+         1 + \sum _{i \in \mathbb{D}} \left (
+         \frac{
+            p(i)
+         }{
+            \gamma(i)
+         }-p(i)
+         \right)
+         \right ]^{-1} \label{eq:d_final}
+      \end{equation}
+
+      \subsection{A Considerações de Recursos} \label{sec:recursos}
+
+         Seguindo a Equação \ref{eq:d_final}, uma tentativa de consideração de recursos seria a adição de recursos na abordagem $\sum_i p_i$, ou seja,  implementar tudo em \hardware\ para maximizar a performance, ignorando todos os custos de desenvolvimento e recursos limitados.
+         Num FPGA, há um número finito de recursos disponíveis para implementação de circuitos em \hardware e como tais recursos são limitados, a maioria das aplicações realísticas iriam exceder esse limite disponível.
+         Um meio de aproximação de recursos é contar o número de células lógicas requeridas para cada recurso.
+         Um chip que terá um valor escalar $ r_{FPGA} $, representará o total de números de células lógicas disponíveis.
+         Então $ r(i) $ pode ser usado para representar a quantidade de células lógicas requeridas por cada recurso $ i $.
+         Fazendo uma simples relação, tem-se que $ \sum_{i \in \mathbb{D}} r(i) < r_{FPGA} $ restringe quão largo $ \mathbb{D} $ pode crescer.
+
+         Sabendo que dispositivos modernos são heterogêneos, uma típica plataforma FPGA tem múltiplos tipos de recursos além de células lógicas como memória, blocos DSP, etc., podendo ser representados por um vetor de recursos
+         %
+         \begin{equation}
+            \vec{r}_{FPGA} =
+            \begin{pmatrix}
+            r_{Logic\ Cells} \\
+            r_{Memory}\\
+            r_{DSP}\\
+            \vdots \\
+            r_{n-1}
+            \end{pmatrix}
+         \end{equation}
+         %
+         e com isso,
+         %
+         \begin{equation}
+            \sum_{i \in \mathbb{D}} \vec{r}(i) < \vec{r}_{FPGA}
+         \end{equation}
+         %
+         onde $ \mathbb{D} $ é o conjunto de recurso incluídos no \design.
+
+         %Infelizmente\todo{a}, esse modelo não leva em consideração o fato de que alguns recursos alocados podem interferir em outros, além de que a estimativa de performance é frequentemente baseada na suposição que recursos são próximos um do outro e recursos de rotas não são parte integral do modelo.
+
+
+%\chapter{O Particionamento de \HS\ para Sistemas \Wearable} \label{chap:desenvolvimento}
+   \section{O Particionamento de \HS\ para Sistemas \Wearable} \label{sec:desenvolvimento}
+
+      De início, será considerado como aplicação \wearable\ um conjunto de instruções organizadas, e como visto na Seção \ref{sec:gc}, esta também representada por uma coleção de grafos de controle de fluxo, ou seja, grafo de chamada, especificando a sua ordem de execução.
+      A partir deste, será feito análises a fim da procura de um particionamento que atenda aos requisitos de dispositivos \wearables, como alto poder de processamento sem o \textit{trade-off} de energia, além de miniaturização, confiabilidade e outros.
+
+      Após esclarecidos algumas definições prévias (Seção~\ref{sec:definicoes_previas}), será apresentado o problema na Seção~\ref{sec:declaracao_problema}.
+      %Alguns fatores podem ajudar nas decisões de particionamento tal como expectativa de ganho de performance (Seção \ref{sec:ganho_performance}) e os recursos utilizados em \hardware\ (Seção \ref{sec:recursos}).%, a forma na qual são usados e, talvez os mais importantes, quanto de sobrecarga de comunicação a decomposição impõe (Seção \ref{sec:comunicacao}) \todo{deixar?}e dificuldade de implementar um conjunto específico em \hardware\ (Seção \ref{sec:dificuldades}).\todo{organizar}
+
+      \subsection{Definições Prévias} \label{sec:definicoes_previas}
+         \begin{description}
+            \item [Recurso:] grupo conectado de instruções de uma aplicação de \design\ referencial de \software\ `adequado' para uma implementação em \hardware.
+
+            O recurso pode variar de um pequeno conjunto de instruções até um modulo de \software\ completo consistente de múltiplas sub-rotinas.
+            Como o tamanho dos recursos afetam na performance, a decisão de implementação em \hardware\ depende da sua melhoria no sistema por inteiro e mensura-se os recursos utilizados com relação a outros recursos candidatos.
+
+            Se determinado que o recurso é vantajoso, então os recursos de implementação em \hardware\ aumentam a arquitetura de \hardware;
+
+            \item [Implementação em \hardware:] recurso adicional de uma específica aplicação;
+
+            \item [Adequado:] descrevendo de forma mais geral no âmbito de sistemas \wearable, é a definição da situação na qual o projetista do sistema antecipa a percepção de vantagens na implementação em \hardware.
+            %Para obter uma boa partição, geralmente deve-se examinar grupos que podem ser maiores ou menores que sub-rotinas definidas pelo programador.
+         \end{description}
+
+         \begin{comment}
+         \begin{figure}[h] \centering
+         \includegraphics[width=0.4\textwidth]{img/partitioning.png}
+         \caption{Representação Geral de um Particionamento em um grafo não direcionado.
+         Os $\bullet$ (pontos) representam componentes da aplicação e as --- (linhas) seus respectivos fluxos de comunicação.
+         A linha tracejada representa a divisão de níveis entre eles, sendo este \hs.
+         Fonte: \citet{Mann2007}.}
+         \label{fig:f4-4}
+         \end{figure}
+\end{comment}
+         %\section{Declaração Formal do Problema}
+         %	Descreveremos problema segundo a definição de \citeauthor{Arato2005, Mann2007} a seguir.
+
+         %\section{Solução analítica para particionamento}
+         %\section{Visão Analítica Para o Particionamento}
+
+
+      \subsection{Declaração do Problema} \label{sec:declaracao_problema}
+         Nesta seção serão apresentadas as declarações matemáticas do problema de agrupamento de instruções em recursos e seus mapeamentos em \hardware\ ou \software, ou seja, o particionamento \hs.
+         %Segundo \cite{Sass2010}, a forma mais comum de transcrever é descrever manualmente o \core\ com um HDL utilizando \design\ referencial de \software\ como especificação, método utilizado para descrever o problema.
+
+         No particionamento, muitos problemas práticos impactam diretamente na performance do sistema.
+         Nem todos os problemas podem ser incorporados num modelo analítico \cite{Wang2016}, e por isso, só podemos esperar que as soluções matemáticas produzam uma uma resposta aproximada ao problema de particionamento ao utilizar a declaração formal.
+
+         Muitas das entradas do modelo são estimadas ou aproximações no qual futuramente degrada a fidelidade de resultados.
+         %%Este é um fato relevante pois com isso, resolvendo o problema de particionamento `no papel', tem-se um particionamento que é próximo ao ótimo.
+         %%Assim, cabe ao \designer\ ser habilidoso em usar os guias e projetar uma solução mais refinada.
+         Dessa forma, é mais eficiente usar uma combinação de técnicas \textit{ad hoc} e matemáticas para encontrar uma solução ótima ou aproximada do que simplesmente confiar numa intuição.
+
+
+         %\begin{comment}
+         %\section{Declaração do Problema}
+         Já descrito as ferramentas matemáticas necessárias para descrever o problema fundamental do particionamento no Capítulo \ref{chap:revisao_bibliografica}, pode-se então descrever formalmente o problema em termos de variáveis. % e descrever um algoritmo \todo{algorit?}para encontrar uma solução aproximada.
+         %
+         A ideia básica consiste em encontrar um particionamento para todos os blocos básicos de uma aplicação e então separá-los em \hs.
+         Formalmente, procura-se por uma partição $ \mathcal{P} $ de todos os blocos básicos $ U $ de uma aplicação (Equação \ref{eq:bigcup}).
+         %
+         %$$ U = \bigcup_{C \in \mathcal{C}} B(C) $$
+         %
+         %$ C = (B,F) $
+         Definida a partição e o universo, tem-se então um subconjunto $ \mathbb{C}\ |\ \mathbb{C} \subseteq U $, onde $ C \in \mathcal{C} $ é um vértice de um grafo de \design\ referencial de \software\ $ \mathcal{A} = (\mathcal{C}, \mathcal{L}) $ (oriundo da Equação \ref{eq:a}).
+         O conjunto $ \mathbb{C} $, chamado conjunto de candidatos, contém todos os recursos arquiteturais potenciais, ou seja, o subconjunto de $ U $ que é esperado para melhorar a performance do sistema se implementado em um \hardware\ reconfigurável.
+         Devido ao limite de recursos, deve-se refinar para o subconjunto $ \mathbb{D} \subseteq \mathbb{C} $ que maximiza nosso métrica de performance.
+         Assim
+         \begin{equation}
+            \begin{array}{rrcl}
+            \text{max}                 & \Gamma ( \mathbb{D})               & ~   & ~                \\
+            subject\ to & \sum_{i \in \mathbb{D}} \vec{r}(i) & < & \vec{r}_{FPGA}
+            \end{array}
+            \label{eq:constraints}
+         \end{equation}
+         %
+         Descrevendo algoritmicamente, uma abordagem seria encontrar todas as partições de $ U $, sintetizando e \textit{profiling} cada partição, e então, quantitativamente avaliar cada $ \Gamma $.
+         Entretanto, este é um problema linear inteiro devido à natureza de alocação e utilização dos recurso físicos do FPGA. %(Seção \ref{sec:pli})
+
+         A seguir, será descrito como é feito uma abordagem para tal, seguindo estudos de \citet{Arato2003, Wang2016}.
+
+\begin{comment}
+
+      \subsection{Abordagem Heurística}
+         O problema de particionamento é essencialmente uma questão indireta de manipulação de parâmetros $ p(i) $ e $ \gamma(i) $ (tempo gasto em e ganho de performance, respectivamente) pelo rearranjo do particionamento $ \mathcal{X} $.
+         Então seleciona-se os elementos de $ \mathcal{X} $ que satisfaz as restrições de recurso e maximiza a performance do sistema $ \Gamma $, Equação \ref{eq:constraints}.
+
+         Uma metodologia heurística que pode ser aplicada seria iniciar a partição natural provida pelo \design\ referencial de \software, ou seja, utiliza-se as sub-rotinas de uma aplicação original.
+         %
+         Utilizando a ferramenta de \textit{profiling}, lista-se as sub-rotinas em ordem decrescente em tempo e verifica-se as que possuem maior valor $ p $.
+         O valor de $ \gamma $ será estimado pela performance esperada a partir da implementação em \hardware\ e ao final, tem-se um ganho estimado do sistema para cada sub-rotina.
+
+         Em seguida, quer-se manipular iterativamente a partição $ \mathcal{X} = \{ X_0, X_1, X_2, ...\} $ criando um novo subconjunto de blocos básicos por meio de operações de casamento e movimentações de blocos.
+         A ideia em realizar alterações iterativas é encontrar mudanças que podem alterar os valores da fração $ p $ ou o valor de $ \gamma $.
+
+         Num \wearable\ que tenha como procedimentos cálculos matemáticos, verificar quais funções possui maior impacto na sua execução e assim, realizar uma busca a fim de encontrar uma partição de procedimentos que poderiam ser implementados em um acelerador aumentando possivelmente o \speedup\ do sistema.
+
+         Para aumentar o ganho performance de recurso $ \gamma (i) $ utilizando abordagens heurísticas, necessita-se verificar o grafo de controle de fluxo do recurso e avaliar se uma mudança o tornará mais sequencial ou paralelo.
+
+         Uma forma de reduzir a fração de tempo gasta de uma sub-rotina é torná-la maior na quantidade de recurso alocada a ela.
+         Por exemplo, casando vários blocos básicos num único bloco.
+         Isso pode ser alcançado procurando por relações no grafo de chamadas ou, após a manipulação, por relacionamentos no grafo de controle de fluxo que conecta subconjuntos.
+
+         %Frequentemente, algoritmos que são inerentemente sequenciais, ou seja, uma forte dependência em seu fluxo ou dependências de controle, possuem melhor performance em processadores, por este não ter a sobrecarga de configurações de transistores e de possuírem melhor gerenciamento de energia nessas circunstâncias.
+         %Ou seja, simplesmente adicionar blocos básicos a qualquer custo pode ter um efeito indesejável de aumentar o comportamento sequencial do recurso, reduzindo o valor de $ \gamma $.
+         %Entretanto, se um componente utilizar-se de menos recursos, então possui potencial de aumentar seu ganho de desempenho pela simplicidade.
+
+         Exemplificando de uma forma mais abstrata, considera-se uma sub-rotina $ X $ e quebrando-a em duas sob-rotinas $ X – X' $ e $ X' $, onde a sub-rotina $ X – X' $ invoca $ X' $.
+         Então se $ X' $ extrai partes de $ X $ que podem ser melhoradas em nível de \hardware\ deixando a parte sequencial em $ X – X' $, então $ \gamma $ de $ X' $ será maior que $ \gamma $ de $ X $ original e provavelmente necessitará de menos recursos.
+
+         %A lei de Ahmdal tenta sempre aumentar a fração de tempo gasto na porção de código que acaba de ser melhorada.
+         %No entanto, quando limitado os recursos, nem sempre é melhor.
+
+         Com isso, é importante notar que qualquer mudança no subconjunto pode afetar a performance para melhor ou pior.
+         Em geral, heurísticas trabalham examinando os grafos da aplicação e então fazendo alterações incrementais ao subconjunto de uma partição.
+         Tais mudanças são guiadas pela tentativa de diminuir o tempo gasto em uma sub-rotina não aumentando dramaticamente seus recursos ou decrescendo sua performance; e a tentativa de melhorar a performance sem aumentar o tempo gasto em uma sub-rotina.
+
+\end{comment}
+
+
+   %\section{Metodologia Proposta}
+   \section{Proposta de Procedimento Analítico} \label{sec:proposta}
+
+      Como conclusão deste capítulo, será formulada uma proposta de metodologia analítica baseada nos conceitos propostos pela literatura, com o foco em componentes procedurais integrados à sistemas \wearables.
+      %E com isso, o trabalho consiste em desenvolver seus respectivos grafos e realizar o particionamento a fim de encontrar uma solução aproximada, respeitando os seus requisitos de funcionamento.
+      %
+      Tal metodologia, apresentada pelo Algoritmo~\ref{alg:proposta}, será considerada apenas como uma orientação para os passos a serem realizados, sendo então, uma proposta representativa do processo a ser realizado para a análise e decisão de particionamento.
+
+      \begin{algorithm}[h]
+         \SetKwData{itt}{it}
+         \SetKwData{pl}{partition\_list}
+         \SetKwData{complexSet}{how\_complex\_set\_is}
+         \SetKwData{md}{matriz\_dados}
+         \SetKwData{complexSet}{how\_complex\_set\_is}
+         \SetKwFunction{graph}{makes\_graph}
+         \SetKwFunction{porte}{analyses\_complex\_set}
+         \SetKwFunction{synth}{synthesizes}
+         \SetKwFunction{resources}{resources\_used}
+         \SetKwFunction{die}{die\_used}
+         \SetKwFunction{energy}{energy\_spent}
+         \SetKwFunction{profiling}{profile}
+         \SetKwFunction{performance}{performance\_analysis}
+         \SetKwFunction{factor}{complexity\_factor}
+         \SetKwFunction{ilp}{integer\_linear\_solve}
+         \SetKwFunction{heuristic}{heuristic}
+         \KwIn{a project description.}
+         \KwOut{a partition solved.}
+
+         %\BlankLine
+         \Begin{
+
+            \BlankLine
+            \profiling{}\;
+            \BlankLine
+
+            \tcp{extration project analyses}
+            \graph{Flow Control Graph}\;
+            \graph{Call Graph}\;
+            %\complexSet $\leftarrow$ \porte{}\tcp*{verify if it is a big project}
+
+            \BlankLine
+
+            \If{exist partitions that can be synthesized}{
+               \ForEach{partition project:\itt $\in$ \pl}{
+                  \synth{\itt}\;
+                  \BlankLine
+                  \resources{\itt}\tcp*{analysis after synth}
+                  \die{\itt}\;
+                  \energy{\itt}\;
+                  %\BlankLine
+
+
+                  \performance{\itt}\;
+               }
+               \BlankLine
+
+               %\uIf(\tcp*[f]{verify if it is a small project}){\factor{\complexSet}}{
+                  \ilp{\pl}\tcp*{analyse quantitatively each $ \Gamma $}
+               %}
+               %\lElse{
+                  %\heuristic{\pl}\;
+               %}
+            }
+         }
+         \caption{Metodologia para avaliação de \wearables.}
+         \label{alg:proposta}
+      \end{algorithm}
+
+      Apresentado o procedimento metodológico, a seguir será listada cada função pertencente à metodologia acima, descrevendo suas funções e seu propósito no trabalho para a obtenção dos objetivos.
+      Para um melhor compreendimento, serão divididos em quatro seções, sendo elas: visualização do projeto, síntese, análise de síntese, particionamento.
+
+      \begin{comment}
+      Dessa forma, o primeiro passo proposto é a análise do sistema por meio de testes em nível de \software, ou seja, o sistema realizado sobre um processador.
+      Como exibido no Algoritmo~\ref{alg:manual}, os processos se baseiam na construção e análise do sistema em um processador.
+      Deve-se realizar a construção de seus gráficos para seu entendimento (linhas 2 e 3), e em seguida (linha 4) uma avaliação do porte do sistema, item essencial para a escolha do algoritmo propício ao realizar o particionamento, caso exista.
+      Nas linhas 5, 6 e 7 são análises feitas a partir da execução do mesmo numa plataforma, obtendo seu \profile, performance e gasto energético respectivamente.
+
+      \begin{algorithm}[h]
+        %\KwResult{Write ere the result }
+        \SetKwData{md}{matriz\_dados}
+        \SetKwData{complexSet}{how\_complex\_set\_is}
+        \SetKwFunction{graph}{makes\_graph}
+        \SetKwFunction{porte}{analyses\_complex\_set}
+        \SetKwFunction{energy}{energy\_spent\_analyses}
+        \SetKwFunction{performance}{performance\_analyses}
+        \SetKwFunction{profiling}{profile}
+        \KwIn{software reference design.}
+        \KwOut{software analyses.}
+        \BlankLine
+        \tcc{this algorithm happens in a soft core system without anyone accelearator}
+        \BlankLine
+        \Begin{
+
+           \tcp{extration project analyses}
+           \graph{Flow Control Graph}\;
+           \graph{Call Graph}\;
+           \complexSet $\leftarrow$ \porte{}\tcp*{verify if it is a big project}
+
+           \BlankLine
+
+           \tcp{physical project analyses}
+           \profiling{}\;
+           \performance{}\;
+           \energy{}\;
+        }
+        \caption{Processos manuais para análise inicial do dispositivo.}
+        \label{alg:manual}
+      \end{algorithm}
+\end{comment}
+
+
+      \begin{enumerate}
+         \item Procedimentos para visualização geral do projeto.
+         Por meio dos dados do \profile\ e a construção dos grafos, é possível ter uma visão geral, verificando se o sistema possui possíveis seções de processamentos críticos para a realização de particionamento \hs.
+         As funções presentes são:
+
+         \begin{itemize}
+            \item \texttt{profile():}
+               procedimento referente à Seção~\ref{sec:profile}.
+               Realiza-se uma análise de tempo gasto em cada procedimento do projeto, apresentando-a ao final de sua execução.
+               Com os resultados, é possível ver locais onde existe um tempo maior de processamento gasto ou de recursos utilizados indicando uma verificação detalhada sobre este a fim de candidatá-lo para uma implementação em \hardware;
+
+            \item \texttt{makes\_graph(}\textit{type}\texttt{):}
+               constrói-se grafos relativos ao projeto, sendo estes de acordo com o tipo especificado no parâmetro.
+               A construção do grafo segue como descrito na Seção~\ref{sec:GCF} na qual procura-se por seções de códigos compondo-os em blocos, compreendendo o fluxo do algoritmo e consecutivamente os procedimentos de chamadas.
+               O parâmetro simboliza a especificação de qual tipo de grafo será construído, sendo ele um grafo de controle de fluxo (Seção~\ref{sec:GCF}) ou grafo de chamada (Seção~\ref{sec:gc}), que como já explicado, necessita do anterior para sua construção;
+         \end{itemize}
+
+         \item \texttt{synthesizes():}
+            caso exista uma possibilidade de particionamento, análise obtida pelo \profile, visualização do grafo e obtenção de uma lista de candidatos, realiza-se então o procedimento de geração de HDL para o desenvolvimento de aceleradores em \textit{hardware} reconfigurável e sua análise de performance e gastos tanto de energia quanto de recursos;
+
+         \item Após a execução do processo de síntese realizado junto com a ferramenta sintetizadora assistida pelo computador, é possível obter vários dados analíticos de alocação de recursos como quantidade de elementos lógicos utilizados, pinos virtuais e físicos, quantidade de bits de memória, além de vários outros.
+         E com a sua sintetização na plataforma, também é possível obter a avaliação de consumo energético, \profile\ e performance.
+         Estes são representados pelos métodos abaixo na qual, aplica-se a cada componente sintetizado separadamente.
+         \begin{itemize}
+
+            \item \texttt{resources\_used():}
+               quais e a quantidade de recursos alocados para utilização no projeto de geração de aceleradores.
+               A alocação de muitos recursos implica num gasto maior de energia criando um \textit{trade-off} a ser analisado;
+
+            \item \texttt{die\_used():}
+               tamanho do \textit{die} utilizado para o projeto do acelerador.
+               Sistemas \wearable\ possuem como requisito a sua miniaturização, impedindo que seu uso limite a capacidade de locomoção, usabilidade ou conforto do usuário, por exemplo;
+
+            \item \texttt{energy\_spent():}
+               valores energéticos do uso do recurso implementado, incluindo os módulos pertencentes a ele como memórias, DSPs e quaisquer outros que estejam integrados à plataforma;
+
+            \item \texttt{performance\_analysis():}
+               comparação das implementações em \hardware\ sobre os recursos em nível de \textit{software}, ou seja análise de performance.
+         \end{itemize}
+
+         \item \texttt{integer\_linear\_solver():}
+            após realizado todas as análises individuais acima, inicia-se o processo de procura de uma solução de particionamento que obtenha bons resultados nos requisitos de um sistema \wearable.
+            Dessa forma, é realizado uma avaliação por meio de um \textit{solver} linear inteiro segundo os dados obtidos.
+            Com o \textit{solver}, é possível realizar uma busca a procura de um particionamento que atenda a quantidade máxima de restrições exigidas por um \wearable.
+      \end{enumerate}
+
+
+      %Conclusão
+      Assim, o trabalho consiste numa metodologia na qual aborda o particionamento para dispositivos \wearables, partindo de uma análise de execução do \software, candidatando alguns procedimentos para sua sintetização e assim a avaliação destes segundo os recursos utilizados para a completude de suas tarefas o que chamamos de particionamento, consistindo da procura de um conjunto que traga melhor desempenho no seu uso. Tudo isso, utilizando recursos disponibilizados pela plataforma em \hardware.
+      %O Algoritmo~\ref{alg:proposta} tem como o objetivo a demonstração do passos necessários para o compreendimento do sistema a ser analisado e consecutivamente a sua partição em busca do aprimoramento da sua performance.

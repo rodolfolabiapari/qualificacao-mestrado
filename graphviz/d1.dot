@@ -1,0 +1,53 @@
+digraph G {
+   graph[dpi=300];
+   compound=true;
+
+	start        [label="Start",          shape="hexagon"];
+   statments    [label="Statments",      shape="plaintext"];
+   read_sensors [label="Read Sensors",   shape="plaintext"];
+   pre_process  [label="Pre Process",    shape="plaintext"];
+   process      [label="Process",        shape="plaintext"];
+   mode         [label="Device mode...",    shape="diamond"];
+   doOperation  [label="Has new state?",    shape="diamond"];
+   feedback     [label="Feedback",       shape="plaintext"];
+   operation    [label="Operation",      shape="plaintext"];
+   backup       [label="Back Up",        shape="plaintext"];
+   end          [label="End",            shape="hexagon"];
+
+
+   /*
+	subgraph cluster_0 {
+		label = "Read Sensors Procedure";
+
+		read_sensors -> pre_process;
+	}
+
+	subgraph cluster_1 {
+		label = "Process Procedure";
+
+		process;
+
+   	subgraph cluster_2 {
+   		label = "Operate Procedure";
+
+   		operation;
+         backup;
+   	}
+	}*/
+
+	start -> statments -> mode;
+
+   read_sensors -> pre_process;
+   pre_process -> process -> doOperation;
+
+   doOperation -> mode [label="No"];
+   doOperation -> operation [label="Yes"];
+   operation -> backup -> mode;
+   operation -> feedback -> process;
+   mode -> read_sensors [label="On"];
+   mode -> end [label="Off"];
+
+   {rank=same; start; end; mode; statments;}
+   {rank=same; read_sensors; backup;}
+   {rank=same; pre_process; process; doOperation; operation;}
+}

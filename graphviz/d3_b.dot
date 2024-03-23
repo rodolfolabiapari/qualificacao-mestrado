@@ -1,0 +1,29 @@
+digraph G {
+   //graph[dpi=300];
+   graph[dpi=200];
+   compound=true;
+   newrank=true;
+
+   subgraph cluster_2 {
+      label = "Sensors Process"; style="dotted";
+
+      read_sensors [label="Reads Sensors"];
+
+      //a [shape="point"]; a -> read_sensors [label="Ambient's Datas"];
+
+      passive        [label="Passive Sensors",   shape="invhouse"];
+      capture_lasers [label="Gets Lasers Image", shape="invhouse"];
+      gap            [label="Gets the Gap Length Between Two Dots", shape="invhouse"];
+      get_distance   [label="Calcules the Distance", shape="invhouse"];
+
+      capture_lasers -> gap -> get_distance -> read_sensors;
+      passive -> read_sensors;
+
+      {rank="same"; capture_lasers; passive;}
+      {rank="same"; read_sensors; get_distance;}
+   }
+
+   a, b [shape="point"];
+
+   a -> read_sensors -> b;
+}

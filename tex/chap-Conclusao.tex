@@ -1,0 +1,56 @@
+%!TEX root = ../main_text.tex
+%\chapter{Experimentos e Resultados} \label{chap:experimentos}
+
+\chapter{Conclusões Parciais e Trabalho Futuro} \label{chap:conclusao}
+
+   Neste capítulo serão descritas as conclusões parciais da pesquisa realizada até o momento e as próximas etapas a serem executadas.   
+
+   \section{Conclusões}
+      %demora da pesquisa em wearables
+      Mesmo a tecnologia embarcada tenha tido um grande avanço nos últimos tempos sendo utilizada nos mais diversos fins, sistemas \wearables\ tiveram seu primeiro aparecimento em pesquisas científicas em \citeyear{Mann1996} por \citeauthor{Mann1996}.
+      Isso, por causa de empecilhos tecnológicos e ferramentais como a necessidade da miniaturização, mobilidade e eficiência energética da tecnologia dos equipamentos utilizados na qual, sem tais especificações, seria inviável a utilização do \wearable.
+      
+      %não tem particionamento para wearables
+      Existe várias pesquisas relacionadas à área de sistemas embarcados no âmbito de particionamento de \hs, inclusive utilizando FPGAs como meio.
+      Entretanto, até o momento deste, não foi encontrado nenhum relato de experiências científicas sobre o particionamento para sistemas \wearables\ com utilização de recursos de \hardwares\ reconfiguráveis, tema tratado neste documento.
+      
+      % objetivos concluídos até então
+      Objetivos realizados até o presente momento:
+      
+      \begin{itemize}
+         \item Introdução de sistemas computacionais \wearables\ e apresentação do problema de particionamento \hs\ no âmbito de de sistemas computacionais embutidos, com foco em sistemas \wearables;
+         
+         \item Apresentação de:
+         \begin{itemize}
+            \item Principais soluções apresentadas ao logo dos anos e as utilizadas atualmente;
+            \item Ferramentas HLS como LegUp e OpenCL para a geração de sistemas computacionais que usufruem de aceleradores em \hardware.
+         \end{itemize}
+         
+         \item Apresentação da abordagem metodológica a ser utilizada para a procura da solução do problema de particionamento \hs\ apresentado.
+      \end{itemize}
+      
+      
+   \section{Trabalho Futuro}
+      A seguir será apresentado os tópicos relativos às próximas etapas a serem realizadas neste trabalho.
+      
+      \begin{itemize}
+         \item Geração de HDL, utilizando as ferramentas automatizadas quando aplicável:
+         \begin{itemize}
+            \item LegUp;
+            \item OpenCL.
+         \end{itemize}
+         
+      \item Realizar-se-á análises de algoritmos situados em sistemas diferentes, sendo esses:
+         \begin{itemize}
+            \item \textbf{Totalmente em nível de \software:} sem auxílio de qualquer acelerador como ao utilizar a plataforma Beagle Bone como sendo o sistema embarcado completo para execução em aplicações \wearables; e em
+            
+            \item \textbf{Híbridos:} formados de processadores e aceleradores utilizando dos recursos de dispositivos reconfiguráveis  a fim de prover maior \speedup\ utilizando recursos de \hardware.
+         \end{itemize}
+         
+         \item A análise de desempenho será feita com os dados obtidos dos dois sistemas citados acima.
+         Executando o projeto nos dois sistemas, em nível de \software\ e híbrido, é possível relacionar o ganho de desempenho realizando as operações apresentadas na Seção~\ref{sec:ganho_performance}.
+                  
+         
+      	\item Redução do tempo de seu desenvolvimento até a disposição do produto ao mercado utilizando os recursos que o desenvolvimento com \hardware\ reconfigurável proporciona. %Wolf1994.
+         \end{itemize}
+      

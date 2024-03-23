@@ -1,0 +1,42 @@
+digraph G {
+   //graph[dpi=300];
+   graph[dpi=200];
+   compound=true;
+   newrank=true;
+
+   end          [label="End",               shape="hexagon"];
+   start        [label="Start",             shape="hexagon"];
+   mode         [label="Device mode...",    shape="diamond"];
+   show_info    [label="Shows Informations"];
+   backup       [label="Does the Backup"];
+
+	subgraph cluster_2 {
+		label = "Sensors Process"; style="dotted";
+
+      read_sensors [label="Reads Sensors"];
+
+      a [shape="point"]; a -> read_sensors [label="Ambient's Datas"];
+
+      #passive        [label="Passive Sensors",   shape="invhouse"];
+      #capture_lasers [label="Gets Lasers Image", shape="invhouse"];
+      #gap            [label="Gets the Gap Length Between Two Dots", shape="invhouse"];
+      #get_distance   [label="Calcules the Distance", shape="invhouse"];
+
+      #capture_lasers -> gap -> get_distance -> read_sensors;
+      #passive -> read_sensors;
+
+      #{rank="same"; capture_lasers; passive;}
+      #{rank="same"; read_sensors; get_distance;}
+	}
+
+   start-> mode;
+   mode -> read_sensors [label="on"];
+   mode -> end          [label="off"];
+
+   read_sensors -> show_info -> backup -> mode;
+
+   // Ranks (usar o newrank)
+   {rank="same"; read_sensors; show_info; backup;}
+
+   {rank="same"; start; mode; end}
+}

@@ -1,0 +1,49 @@
+digraph G {
+   //graph[dpi=300];
+   graph[dpi=200];
+   compound=true;
+   newrank=true;
+
+   isConnected  [label="Is Connected?",    shape="diamond"];
+   cpu          [label="Main Controller", shape="box3d"];
+
+	subgraph cluster_1 {
+		label = "Collision Sensors Process"; style="dotted";
+
+      verify_collision [label="Is There Possible of Collision"];
+	}
+   verify_collision -> cpu [label="Yes, do interruption", style="dashed"];
+   verify_collision -> verify_collision [label="No"];
+
+	subgraph cluster_2 {
+		label = "Activity Sensors Process"; style="dotted";
+
+      read             [label="Reads Sensors' Datas"];
+      get              [label="Gets Sensors' Datas"];
+      store            [label="Stores Persistently"];
+
+      read -> store;
+	}
+   cpu -> get [dir="both"];
+
+
+	subgraph cluster_4 {
+		label = "Itself Warning Process"; style="dotted";
+      leds            [label="Leds Warning"];
+	}
+   cpu -> leds [style="dashed"];
+
+	subgraph cluster_3 {
+		label = "Wireless Connectivity Process"; style="dotted";
+
+      phone           [label="Smartphone"];
+      wearable        [label="Wearable"];
+      isConnected -> phone [label="Yes, Sync"];
+      isConnected -> {wearable phone}    [label="Yes, Warning", style="dashed"];
+      isConnected -> isConnected [label="No"];
+	}
+   cpu -> isConnected;
+
+   // Ranks (usar o newrank)
+   {rank="same"; cpu; leds;}
+}
